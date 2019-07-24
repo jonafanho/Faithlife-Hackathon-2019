@@ -8,6 +8,8 @@
   "home": "主頁",
   "join-room": "加入群組",
   "name": "姓名",
+  "name-error-text": "其他人需要知道您是誰。",
+  "name-error-title": "請輸入姓名！",
   "next": "下一頁",
   "phone": "電話號碼",
   "ok": "確定",

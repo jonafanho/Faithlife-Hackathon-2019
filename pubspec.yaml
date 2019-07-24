@@ -29,6 +29,7 @@ dependencies:
   http:
   url_launcher:
   location:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

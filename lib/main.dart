@@ -4,6 +4,7 @@ import "package:google_maps_flutter/google_maps_flutter.dart";
 import "package:http/http.dart" as http;
 import "package:url_launcher/url_launcher.dart" as launcher;
 import "package:location/location.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 import "localizations.dart";
 import "welcome.dart";
@@ -14,7 +15,6 @@ String name = "";
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,7 +48,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return name == ""
-        ? CreateJoinGroup()
+        ? CreateJoinGroup(
+            askName: true,
+          )
         : Scaffold(
             appBar: AppBar(
                 title: Text(AppLocalizations.of(context).translate("home"))),
@@ -63,10 +65,11 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  accountName: Text("Jonathan Ho"),
+                  accountName: Text(name),
                   accountEmail: Text("+852 2345 6789"),
                   currentAccountPicture: CircleAvatar(
-                    child: Text("J", style: TextStyle(fontSize: 40)),
+                    child: Text(name.substring(0, 1).toUpperCase(),
+                        style: TextStyle(fontSize: 40)),
                   ),
                 ),
                 ListTile(
@@ -86,7 +89,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => CreateJoinGroup()));
+                            builder: (context) => CreateJoinGroup(
+                                  askName: false,
+                                )));
                   },
                 ),
                 ListTile(
