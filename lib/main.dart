@@ -6,7 +6,7 @@ import "package:url_launcher/url_launcher.dart" as launcher;
 import "package:location/location.dart";
 
 import "localizations.dart";
-import "createJoinGroup.dart";
+import "welcome.dart";
 
 Color themeColour = Colors.deepOrange;
 String name = "";
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
+          if (supportedLocale.languageCode == "en") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },

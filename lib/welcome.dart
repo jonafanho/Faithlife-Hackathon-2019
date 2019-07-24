@@ -20,7 +20,12 @@ class CreateJoinGroup extends StatelessWidget {
             AppLocalizations.of(context).translate("create-join"),
             style: TextStyle(fontSize: 16),
           ),
-          Radio(value: 0, groupValue: 1, onChanged: (value) {}),
+          RadioListTile(
+            value: 0,
+            groupValue: 1,
+            onChanged: (value) {},
+            title: Text("hi"),
+          ),
           TextField(
             decoration: InputDecoration(
               labelText: AppLocalizations.of(context).translate("room-code"),
@@ -30,7 +35,12 @@ class CreateJoinGroup extends StatelessWidget {
             autocorrect: false,
             maxLength: 8,
           ),
-          Radio(value: 0, groupValue: 1, onChanged: (value) {}),
+          RadioListTile(
+            value: 0,
+            groupValue: 1,
+            onChanged: (value) {},
+            title: Text("hi2"),
+          ),
           TextField(
             decoration: InputDecoration(
               labelText: AppLocalizations.of(context).translate("group-name"),
