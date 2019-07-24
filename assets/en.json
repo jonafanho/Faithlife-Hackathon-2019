@@ -1,12 +1,18 @@
 {
   "address-book": "Address book",
+  "back": "Back",
+  "create-group": "Create a new group",
   "create-join": "Create or join group",
+  "group-name": "Group name",
   "help": "Help",
   "home": "Home",
+  "join-room": "Join an existing room",
   "name": "Name",
-  "name-details": "First and last name",
+  "next": "Next",
   "ok": "OK",
   "phone": "Phone number",
+  "room-code": "Room code",
   "settings": "Settings",
-  "submit": "Submit"
+  "submit": "Submit",
+  "welcome": "Welcome to"
 }

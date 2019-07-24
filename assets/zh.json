@@ -1,12 +1,18 @@
 {
   "address-book": "通訊錄",
+  "back": "上一頁",
+  "create-group": "建立群組",
   "create-join": "建立或加入群組",
+  "group-name": "群組名稱",
   "help": "幫助",
   "home": "主頁",
+  "join-room": "加入群組",
   "name": "姓名",
-  "name-details": "貴姓和名字",
+  "next": "下一頁",
   "phone": "電話號碼",
   "ok": "確定",
+  "room-code": "群組密碼",
   "settings": "設定",
-  "submit": "輸入"
+  "submit": "輸入",
+  "welcome": "歡迎使用"
 }
