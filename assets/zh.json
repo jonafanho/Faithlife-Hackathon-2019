@@ -1,5 +1,7 @@
 {
   "address-book": "通訊錄",
+  "at-least": "至少",
+  "at-most": "最多",
   "back": "上一頁",
   "centre-map": "返回地圖中心",
   "create-group": "建立群組",
@@ -11,6 +13,8 @@
   "emotion-none": "無表情",
   "emotion-sad": "傷心",
   "emotion-thankful": "感恩",
+  "enter-message": "輸入信息...",
+  "filters": "篩選：",
   "group-name": "群組名稱",
   "help": "幫助",
   "home": "主頁",
@@ -22,7 +26,14 @@
   "phone": "電話號碼",
   "ok": "確定",
   "room-code": "群組密碼",
+  "save": "儲存",
   "settings": "設定",
+  "sex": "性別：",
+  "sex-both": "全部",
+  "sex-female": "女",
+  "sex-male": "男",
   "submit": "輸入",
-  "welcome": "歡迎使用"
+  "type": "種類：",
+  "welcome": "歡迎使用",
+  "years-old": "歲"
 }

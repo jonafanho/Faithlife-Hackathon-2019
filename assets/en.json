@@ -1,5 +1,7 @@
 {
   "address-book": "Address book",
+  "at-least": "At least",
+  "at-most": "At most",
   "back": "Back",
   "centre-map": "Centre map",
   "create-group": "Create a new group",
@@ -11,6 +13,8 @@
   "emotion-none": "None",
   "emotion-sad": "Sad",
   "emotion-thankful": "Thankful",
+  "enter-message": "Enter a message...",
+  "filters": "Filters:",
   "group-name": "Group name",
   "help": "Help",
   "home": "Home",
@@ -22,7 +26,14 @@
   "ok": "OK",
   "phone": "Phone number",
   "room-code": "Room code",
+  "save": "Save",
   "settings": "Settings",
+  "sex": "Sex:",
+  "sex-both": "Both",
+  "sex-female": "Female",
+  "sex-male": "Male",
   "submit": "Submit",
-  "welcome": "Welcome to"
+  "type": "Type:",
+  "welcome": "Welcome to",
+  "years-old": "years old"
 }

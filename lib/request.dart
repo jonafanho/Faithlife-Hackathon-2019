@@ -5,61 +5,64 @@ import "main.dart";
 import "localizations.dart";
 import "welcome.dart";
 
-String typeDropdownValue;
-String message;
-bool proximityChecked = false;
-int proximityValue;
-bool sexChecked = false;
-String sexValue;
-bool ageChecked = false;
-int ageStart;
-int ageEnd;
-bool groupChecked = false;
-String groupValue;
-
-
 class RequestMeet extends StatefulWidget {
   @override
   _RequestMeetState createState() => _RequestMeetState();
 }
 
 class _RequestMeetState extends State<RequestMeet> {
-  // This widget is the root of your application.
+  String _typeDropdownValue;
+  String _message;
+  bool _proximityChecked = false;
+  int _distance;
+  bool _sexChecked = false;
+  List<String> _sexValues;
+  String _sexValue;
+  bool _ageStartChecked = false, _ageEndChecked = false;
+  int _ageStart, _ageEnd;
+  List<String> _groups;
+  String _group;
+
   @override
   Widget build(BuildContext context) {
+    _sexValues = [
+      AppLocalizations.of(context).translate("sex-both"),
+      AppLocalizations.of(context).translate("sex-female"),
+      AppLocalizations.of(context).translate("sex-male")
+    ];
+    if (_sexValue == null) _sexValue = _sexValues.first;
+    _groups = ["All groups", "Group1", "Group2", "Group3"];
+    if (_group == null) _group = _groups.first;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Send Request"),
+        title: Text(AppLocalizations.of(context).translate("create-request")),
       ),
       body: ListView(
-        padding: EdgeInsets.all(32),
         children: <Widget>[
           ListTile(
-              title: Row(children: [
-                Text("Type:   "),
+            title: Row(
+              children: [
+                Text(AppLocalizations.of(context).translate("type")),
+                SizedBox(width: 16),
                 DropdownButton<String>(
                   hint: Text(
                     "Meeting Type",
                     textAlign: TextAlign.center,
                   ),
-                  style: new TextStyle(
-                    color: Colors.black,
-                  ),
-                  value: typeDropdownValue,
+                  value: _typeDropdownValue,
                   onChanged: (String newValue) {
                     setState(() {
-                      typeDropdownValue = newValue;
+                      _typeDropdownValue = newValue;
                     });
                   },
                   items: <String>['Prayer', 'Bible', 'Service', 'Chat']
-                      .map<DropdownMenuItem<String>>((String value) {
+                      .map<DropdownMenuItem<String>>((value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(
                         value,
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                          color: value == typeDropdownValue
+                        style: TextStyle(
+                          color: value == _typeDropdownValue
                               ? themeColour
                               : Colors.black,
                         ),
@@ -67,243 +70,196 @@ class _RequestMeetState extends State<RequestMeet> {
                     );
                   }).toList(),
                 ),
-              ])),
+              ],
+            ),
+          ),
           ListTile(
-              title: Text(
-                "Message",
-              )),
+            title: TextField(
+              maxLines: 5,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText:
+                    AppLocalizations.of(context).translate("enter-message"),
+              ),
+              onChanged: (text) {
+                _message = text;
+              },
+            ),
+          ),
           ListTile(
-              title: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter your message...'),
-                onChanged: (text) {
-                  message = text;
-                },
-              )),
-          ListTile(
-              title: Text(
-                "Filters:",
-              )),
-          CheckboxListTile(
-            value: proximityChecked,
-            onChanged: (bool value) {
-              setState(() {
-                proximityChecked = value;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Row(children: [
-              Text(
-                "within  ",
-                style: new TextStyle(
-                  color: proximityChecked
-                      ? Colors.black
-                      : Colors.grey,
-                ),
-              ),
-              Flexible(
-                child: new Container(
-                  width: 50.0,
-                  child: TextField(
-                    style: new TextStyle(color: proximityChecked ? themeColour : Colors.grey),
-                    enabled: proximityChecked,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(4),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) {
-                      proximityValue = int.parse(text);
-                    },
-                  ),
-                ),
-              ),
-              Text(
-                " km",
-                style: new TextStyle(
-                  color: proximityChecked
-                      ? Colors.black
-                      : Colors.grey,
-                ),
-              ),
-            ]),
+            title: Text(AppLocalizations.of(context).translate("filters")),
           ),
           CheckboxListTile(
-            value: sexChecked,
+            value: _proximityChecked,
             onChanged: (bool value) {
               setState(() {
-                sexChecked = value;
+                _proximityChecked = value;
               });
             },
             controlAffinity: ListTileControlAffinity.leading,
-            title: Row(children: [
-              Text(
-                "Gender:  ",
-                style: new TextStyle(
-                  color: sexChecked
-                      ? Colors.black
-                      : Colors.grey,
+            title: Row(
+              children: [
+                Text(
+                  "within  ",
+                  style: TextStyle(
+                    color: _proximityChecked ? Colors.black : Colors.grey,
+                  ),
                 ),
-              ),
-              DropdownButton<String>(
-                hint: Text(
-                  "Sex",
-                  textAlign: TextAlign.center,
-                ),
-                style: new TextStyle(
-                  color: Colors.black,
-                ),
-                value: sexValue,
-                onChanged: sexChecked ? (String newValue) {
-                  if(sexChecked) {
-                    setState(() {
-                      sexValue = newValue;
-                    });
-                  }
-                } : null,
-                items: <String>["Male", "Female"]
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                        color: value == sexValue
-                            ? themeColour
-                            : Colors.black,
+                Flexible(
+                  child: Container(
+                    width: 50.0,
+                    child: TextField(
+                      style: TextStyle(
+                        color: _proximityChecked ? themeColour : Colors.grey,
                       ),
+                      enabled: _proximityChecked,
+                      inputFormatters: <TextInputFormatter>[
+                        WhitelistingTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4),
+                      ],
+                      keyboardType: TextInputType.number,
+                      onChanged: (text) {
+                        _distance = int.parse(text);
+                      },
                     ),
-                  );
-                }).toList(),
-              ),
-            ]),
-          ),
-          CheckboxListTile(
-            value: ageChecked,
-            onChanged: (bool value) {
-              setState(() {
-                ageChecked = value;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-            title: Row(children: [
-              Flexible(
-                child: new Container(
-                  width: 50.0,
-                  child: TextField(
-                    style: new TextStyle(color: ageChecked ? themeColour : Colors.grey),
-                    enabled: ageChecked,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(3),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) {
-                      ageStart = int.parse(text);
-                    },
                   ),
                 ),
-              ),
-              Text(
-                " years old to ",
-                style: new TextStyle(
-                  color: ageChecked
-                      ? Colors.black
-                      : Colors.grey,
-                ),
-              ),
-              Flexible(
-                child: new Container(
-                  width: 50.0,
-                  child: TextField(
-                    style: new TextStyle(color: ageChecked ? themeColour : Colors.grey),
-                    enabled: ageChecked,
-                    inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(3),
-                    ],
-                    keyboardType: TextInputType.number,
-                    onChanged: (text) {
-                      ageEnd = int.parse(text);
-                    },
+                Text(
+                  " km",
+                  style: TextStyle(
+                    color: _proximityChecked ? Colors.black : Colors.grey,
                   ),
                 ),
-              ),
-              Text(
-                " years old",
-                style: new TextStyle(
-                  color: ageChecked
-                      ? Colors.black
-                      : Colors.grey,
-                ),
-              ),
-            ]),
+              ],
+            ),
           ),
           CheckboxListTile(
-            value: groupChecked,
+            value: _ageStartChecked,
             onChanged: (bool value) {
               setState(() {
-                groupChecked = value;
+                _ageStartChecked = value;
               });
             },
             controlAffinity: ListTileControlAffinity.leading,
             title: Row(children: [
               Text(
-                "Send to: ",
-                style: new TextStyle(
-                  color: groupChecked
-                      ? Colors.black
-                      : Colors.grey,
+                AppLocalizations.of(context).translate("at-least") + " ",
+                style: TextStyle(
+                  color: _ageStartChecked ? Colors.black : Colors.grey,
                 ),
               ),
-              DropdownButton<String>(
-                hint: Text(
-                  "Your Groups",
-                  textAlign: TextAlign.center,
+              Flexible(
+                child: Container(
+                  width: 50.0,
+                  child: TextField(
+                    enabled: _ageStartChecked,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      _ageStart = int.parse(text);
+                    },
+                  ),
                 ),
-                style: new TextStyle(
-                  color: Colors.black,
+              ),
+              Text(
+                " " + AppLocalizations.of(context).translate("years-old"),
+                style: TextStyle(
+                  color: _ageStartChecked ? Colors.black : Colors.grey,
                 ),
-                value: groupValue,
-                onChanged: groupChecked ? (String newValue) {
-                  if(groupChecked) {
-                    setState(() {
-                      groupValue = newValue;
-                    });
-                  }
-                } : null,
-                items: <String>["Group1", "Group2", "Group3"]
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      textAlign: TextAlign.center,
-                      style: new TextStyle(
-                        color: value == groupValue
-                            ? themeColour
-                            : Colors.black,
-                      ),
-                    ),
-                  );
-                }).toList(),
               ),
             ]),
           ),
-          RaisedButton(
-            child: groupChecked && groupValue != null ?
-            Text('Send to "'+groupValue+'"', style: new TextStyle(color: Colors.white)) : Text('Send to all groups', style: new TextStyle(color: Colors.white)),
-            color: Theme.of(context).accentColor,
-            elevation: 4.0,
-            splashColor: Colors.blueGrey,
-            onPressed: () {
-              // Perform some action
+          CheckboxListTile(
+            value: _ageEndChecked,
+            onChanged: (bool value) {
+              setState(() {
+                _ageEndChecked = value;
+              });
             },
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Row(children: [
+              Text(
+                AppLocalizations.of(context).translate("at-most") + " ",
+                style: TextStyle(
+                  color: _ageEndChecked ? Colors.black : Colors.grey,
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  width: 50.0,
+                  child: TextField(
+                    enabled: _ageEndChecked,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      _ageEnd = int.parse(text);
+                    },
+                  ),
+                ),
+              ),
+              Text(
+                " " + AppLocalizations.of(context).translate("years-old"),
+                style: TextStyle(
+                  color: _ageEndChecked ? Colors.black : Colors.grey,
+                ),
+              ),
+            ]),
+          ),
+          ListTile(
+            title: Text(AppLocalizations.of(context).translate("sex")),
+            subtitle: DropdownButton<String>(
+              value: _sexValue,
+              onChanged: (newValue) {
+                setState(() {
+                  _sexValue = newValue;
+                });
+              },
+              isExpanded: true,
+              items: _sexValues.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          ),
+          ListTile(
+            title: Text("Target:"),
+            subtitle: DropdownButton<String>(
+              value: _group,
+              onChanged: (String newValue) {
+                setState(() {
+                  _group = newValue;
+                });
+              },
+              isExpanded: true,
+              items: _groups.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          ),
+          ListTile(
+            title: RaisedButton(
+              child: _group == _groups.first
+                  ? Text('Send to all groups')
+                  : Text('Send to "' + _group + '"'),
+              textColor: Colors.white,
+              color: themeColour,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
         ],
       ),

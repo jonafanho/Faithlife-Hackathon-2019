@@ -25,20 +25,21 @@ class _ProfileState extends State<Profile> {
         children: <Widget>[
           ListTile(
             title: DropdownButton<String>(
-                hint: Text("Set your mood!"),
-                value: _selectedMood,
-                items: _moodStringList
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedMood = value;
-                  });
-                }),
+              hint: Text("Set your mood!"),
+              value: _selectedMood,
+              isExpanded: true,
+              onChanged: (value) {
+                setState(() {
+                  _selectedMood = value;
+                });
+              },
+              items: _moodStringList.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
           ),
           ListTile(),
           ListTile(
