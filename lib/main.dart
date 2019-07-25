@@ -15,6 +15,8 @@ int savedNameId = 0;
 Person myself = new Person();
 LatLng _pos = LatLng(47.649281, -122.358524);
 Map<Mood, String> moodMap;
+Map<Sex, String> sexMap;
+List<String> moodStringList, sexStringList;
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
@@ -81,6 +83,19 @@ class _MyHomePageState extends State<MyHomePage> {
           "😠 " + AppLocalizations.of(context).translate("emotion-angry"),
       Mood.none: AppLocalizations.of(context).translate("emotion-none"),
     };
+    moodStringList = new List<String>();
+    moodMap.forEach((mood, string) {
+      moodStringList.add(string);
+    });
+    sexMap = {
+      Sex.none: AppLocalizations.of(context).translate("sex-none"),
+      Sex.female: AppLocalizations.of(context).translate("sex-female"),
+      Sex.male: AppLocalizations.of(context).translate("sex-male")
+    };
+    sexStringList = new List<String>();
+    sexMap.forEach((sex, string) {
+      sexStringList.add(string);
+    });
     return savedNameId == 0
         ? CreateJoinGroup(
             askName: true,
@@ -102,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   accountName: Text(myself.getName()),
-                  accountEmail: Text(myself.getPhone()),
+                  accountEmail: Text("A child of God"),
                   onDetailsPressed: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Profile()));
@@ -202,7 +217,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         new MaterialPageRoute(
                             builder: (context) => RequestMeet()));
                   },
-                  tooltip: AppLocalizations.of(context).translate("create-request"),
+                  tooltip:
+                      AppLocalizations.of(context).translate("create-request"),
                   child: Icon(Icons.add),
                 ),
               ],
@@ -216,4 +232,9 @@ class _MyHomePageState extends State<MyHomePage> {
       zoom: 15,
     )));
   }
+}
+
+T getKeyFromMap<T>(Map<T, String> map, String sex) {
+  for (T s in map.keys) if (map[s] == sex) return s;
+  return null;
 }

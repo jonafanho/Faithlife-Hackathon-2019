@@ -59,8 +59,12 @@ class Person {
     return _mood;
   }
 
+  Sex getSex() {
+    return _sex;
+  }
+
   String getPhone() {
-    return _phone > 0 ? _phone.toString() : "A child of God";
+    return _phone > 0 ? _phone.toString() : "";
   }
 
   void setData({
@@ -70,6 +74,7 @@ class Person {
     int birthMonth,
     int birthDay,
     int phone,
+    Sex sex,
   }) {
     if (name != null) _name = name;
     if (mood != null) _mood = mood;
@@ -77,6 +82,7 @@ class Person {
     if (birthMonth != null) _birthMonth = birthMonth;
     if (birthDay != null) _birthDay = birthDay;
     if (phone != null) _phone = phone;
+    if (sex != null) _sex = sex;
     _writeToDatabase();
   }
 

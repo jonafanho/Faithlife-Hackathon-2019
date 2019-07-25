@@ -17,7 +17,6 @@ class _RequestMeetState extends State<RequestMeet> {
   bool _proximityChecked = false;
   int _distance;
   bool _sexChecked = false;
-  List<String> _sexValues;
   String _sexValue;
   bool _ageStartChecked = false, _ageEndChecked = false;
   int _ageStart, _ageEnd;
@@ -26,12 +25,7 @@ class _RequestMeetState extends State<RequestMeet> {
 
   @override
   Widget build(BuildContext context) {
-    _sexValues = [
-      AppLocalizations.of(context).translate("sex-both"),
-      AppLocalizations.of(context).translate("sex-female"),
-      AppLocalizations.of(context).translate("sex-male")
-    ];
-    if (_sexValue == null) _sexValue = _sexValues.first;
+    if (_sexValue == null) _sexValue = sexStringList.first;
     _groups = ["All groups", "Group1", "Group2", "Group3"];
     if (_group == null) _group = _groups.first;
     return Scaffold(
@@ -222,7 +216,7 @@ class _RequestMeetState extends State<RequestMeet> {
                 });
               },
               isExpanded: true,
-              items: _sexValues.map<DropdownMenuItem<String>>((value) {
+              items: sexStringList.map<DropdownMenuItem<String>>((value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
