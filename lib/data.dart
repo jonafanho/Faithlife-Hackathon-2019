@@ -80,12 +80,21 @@ class Person {
     var data = json.decode(await _getData("person_" + nameId.toString()));
     if (data == null) return false;
     _name = data["name"];
-    //_mood = data["mood"];
-    _birthYear = int.parse(data["birthYear"]);
-    _birthMonth = int.parse(data["birthMonth"]);
-    _birthDay = int.parse(data["birthDay"]);
-    //_sex = data["sex"];
-    _phone = int.parse(data["phone"]);
+    try {
+      _mood = Mood.values[int.parse(data["mood"])];
+      _birthYear = int.parse(data["birthYear"]);
+      _birthMonth = int.parse(data["birthMonth"]);
+      _birthDay = int.parse(data["birthDay"]);
+      _sex = Sex.values[int.parse(data["sex"])];
+      _phone = int.parse(data["phone"]);
+    } catch (e) {
+      _mood = Mood.none;
+      _birthYear = -1;
+      _birthMonth = -1;
+      _birthDay = -1;
+      _sex = Sex.none;
+      _phone = -1;
+    }
     print(data);
     return true;
   }
@@ -94,7 +103,7 @@ class Person {
     String body = '{"name":"';
     body += _name;
     body += '","mood":"';
-    body += _mood.toString();
+    body += _mood.index.toString();
     body += '","birthYear":"';
     body += _birthYear.toString();
     body += '","birthMonth":"';
@@ -102,7 +111,7 @@ class Person {
     body += '","birthDay":"';
     body += _birthDay.toString();
     body += '","sex":"';
-    body += _sex.toString();
+    body += _sex.index.toString();
     body += '","phone":"';
     body += _phone.toString();
     body += '"}';

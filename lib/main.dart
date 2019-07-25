@@ -8,6 +8,7 @@ import "localizations.dart";
 import "data.dart";
 import "welcome.dart";
 import "request.dart";
+import "profile.dart";
 
 Color themeColour = Colors.deepOrange;
 int savedNameId = 0;
@@ -74,6 +75,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 UserAccountsDrawerHeader(
                   accountName: Text(myself.getName()),
                   accountEmail: Text(myself.getPhone()),
+                  onDetailsPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Profile()));
+                  },
                   currentAccountPicture: CircleAvatar(
                     child: Text(
                         myself.getName() != ""
