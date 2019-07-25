@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 
 import "main.dart";
 import "localizations.dart";
+import "data.dart";
 
 enum WelcomeChoice { joinRoom, createGroup }
 
@@ -93,9 +94,9 @@ class _CreateJoinGroupListState extends State<_CreateJoinGroupList> {
 }
 
 class _NamePhoneList extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    String _name = "";
     return ListView(
       children: <Widget>[
         ListTile(
@@ -108,14 +109,14 @@ class _NamePhoneList extends StatelessWidget {
             autocorrect: false,
             maxLength: 100,
             onChanged: (text) {
-              name = text;
+              _name = text;
             },
           ),
         ),
         ListTile(
           title: RaisedButton(
             onPressed: () {
-              if (name == "")
+              if (_name == "")
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
@@ -134,13 +135,15 @@ class _NamePhoneList extends StatelessWidget {
                     ],
                   ),
                 );
-              else
+              else {
+                myself.generate(_name);
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => CreateJoinGroup(
                               askName: false,
                             )));
+              }
             },
             textColor: Colors.white,
             color: themeColour,

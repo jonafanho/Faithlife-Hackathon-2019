@@ -1,18 +1,24 @@
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
-import "package:http/http.dart" as http;
 import "package:url_launcher/url_launcher.dart" as launcher;
 import "package:location/location.dart";
-import "package:shared_preferences/shared_preferences.dart";
 
 import "localizations.dart";
+import "data.dart";
 import "welcome.dart";
 
 Color themeColour = Colors.deepOrange;
-String name = "";
+int _savedNameId = 0;
+Person myself = new Person();
 
-void main() => runApp(MyApp());
+enum Mood { happy, thankful, sad, angry, none }
+enum Sex { none, male, female }
+
+Future main() async {
+  _savedNameId = await init();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -47,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return name == ""
+    return _savedNameId == 0
         ? CreateJoinGroup(
             askName: true,
           )
@@ -65,10 +71,10 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 UserAccountsDrawerHeader(
-                  accountName: Text(name),
+                  accountName: Text(myself.getName()),
                   accountEmail: Text("+852 2345 6789"),
                   currentAccountPicture: CircleAvatar(
-                    child: Text(name.substring(0, 1).toUpperCase(),
+                    child: Text(myself.getName().substring(0, 1).toUpperCase(),
                         style: TextStyle(fontSize: 40)),
                   ),
                 ),
