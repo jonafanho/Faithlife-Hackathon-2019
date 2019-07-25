@@ -4,6 +4,7 @@ import "package:flutter/services.dart";
 import "main.dart";
 import "localizations.dart";
 import "welcome.dart";
+import "data.dart";
 
 class RequestMeet extends StatefulWidget {
   @override
@@ -11,7 +12,7 @@ class RequestMeet extends StatefulWidget {
 }
 
 class _RequestMeetState extends State<RequestMeet> {
-  String _typeDropdownValue;
+  String _meetingTypeValue;
   String _message;
   bool _proximityChecked = false;
   int _distance;
@@ -49,10 +50,10 @@ class _RequestMeetState extends State<RequestMeet> {
                     "Meeting Type",
                     textAlign: TextAlign.center,
                   ),
-                  value: _typeDropdownValue,
+                  value: _meetingTypeValue,
                   onChanged: (String newValue) {
                     setState(() {
-                      _typeDropdownValue = newValue;
+                      _meetingTypeValue = newValue;
                     });
                   },
                   items: <String>['Prayer', 'Bible', 'Service', 'Chat']
@@ -62,7 +63,7 @@ class _RequestMeetState extends State<RequestMeet> {
                       child: Text(
                         value,
                         style: TextStyle(
-                          color: value == _typeDropdownValue
+                          color: value == _meetingTypeValue
                               ? themeColour
                               : Colors.black,
                         ),
@@ -258,6 +259,7 @@ class _RequestMeetState extends State<RequestMeet> {
               color: themeColour,
               onPressed: () {
                 Navigator.pop(context);
+
               },
             ),
           ),
