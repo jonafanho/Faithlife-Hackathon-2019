@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
+          if (supportedLocale.languageCode == "en") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },

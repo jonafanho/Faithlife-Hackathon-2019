@@ -165,7 +165,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     });
                   }
                 } : null,
-                items: <String>["Male", "Female", "None"]
+                items: <String>["Male", "Female"]
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -297,7 +297,7 @@ class _RequestMeetState extends State<RequestMeet> {
           ),
           RaisedButton(
             child: groupChecked && groupValue != null ?
-            Text('Send to group', style: new TextStyle(color: Colors.white)) : Text('Send to all groups', style: new TextStyle(color: Colors.white)),
+            Text('Send to "'+groupValue+'"', style: new TextStyle(color: Colors.white)) : Text('Send to all groups', style: new TextStyle(color: Colors.white)),
             color: Theme.of(context).accentColor,
             elevation: 4.0,
             splashColor: Colors.blueGrey,
