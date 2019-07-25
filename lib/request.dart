@@ -17,12 +17,14 @@ int ageEnd;
 bool groupChecked = false;
 String groupValue;
 
+
 class RequestMeet extends StatefulWidget {
   @override
   _RequestMeetState createState() => _RequestMeetState();
 }
 
 class _RequestMeetState extends State<RequestMeet> {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,34 +36,6 @@ class _RequestMeetState extends State<RequestMeet> {
         children: <Widget>[
           ListTile(
               title: Row(children: [
-            Text("Type:   "),
-            DropdownButton<String>(
-              hint: Text(
-                "Meeting Type",
-                textAlign: TextAlign.center,
-              ),
-              style: TextStyle(
-                color: Colors.black,
-              ),
-              value: typeDropdownValue,
-              onChanged: (newValue) {
-                setState(() {
-                  typeDropdownValue = newValue;
-                });
-              },
-              items: <String>['Prayer', 'Bible', 'Service', 'Chat']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: value == typeDropdownValue
-                          ? Colors.deepOrange
-                          : Colors.black,
-                    ),
-                  ),
                 Text("Type:   "),
                 DropdownButton<String>(
                   hint: Text(
@@ -96,20 +70,20 @@ class _RequestMeetState extends State<RequestMeet> {
               ])),
           ListTile(
               title: Text(
-            "Message",
-          )),
+                "Message",
+              )),
           ListTile(
               title: TextField(
-            textCapitalization: TextCapitalization.sentences,
-            keyboardType: TextInputType.multiline,
-            maxLines: 3,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your message...'),
-            onChanged: (text) {
-              message = text;
-            },
-          )),
+                textCapitalization: TextCapitalization.sentences,
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter your message...'),
+                onChanged: (text) {
+                  message = text;
+                },
+              )),
           ListTile(
               title: Text(
                 "Filters:",
@@ -129,17 +103,17 @@ class _RequestMeetState extends State<RequestMeet> {
                   color: proximityChecked
                       ? Colors.black
                       : Colors.grey,
-                  ),
+                ),
               ),
               Flexible(
-                child: Container(
+                child: new Container(
                   width: 50.0,
                   child: TextField(
                     style: new TextStyle(color: proximityChecked ? themeColour : Colors.grey),
                     enabled: proximityChecked,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
+                      new LengthLimitingTextInputFormatter(4),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
@@ -180,7 +154,7 @@ class _RequestMeetState extends State<RequestMeet> {
                   "Sex",
                   textAlign: TextAlign.center,
                 ),
-                style: TextStyle(
+                style: new TextStyle(
                   color: Colors.black,
                 ),
                 value: sexValue,
@@ -198,7 +172,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     child: Text(
                       value,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: new TextStyle(
                         color: value == sexValue
                             ? themeColour
                             : Colors.black,
@@ -219,14 +193,14 @@ class _RequestMeetState extends State<RequestMeet> {
             controlAffinity: ListTileControlAffinity.leading,
             title: Row(children: [
               Flexible(
-                child: Container(
+                child: new Container(
                   width: 50.0,
                   child: TextField(
                     style: new TextStyle(color: ageChecked ? themeColour : Colors.grey),
                     enabled: ageChecked,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
+                      new LengthLimitingTextInputFormatter(3),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
@@ -244,14 +218,14 @@ class _RequestMeetState extends State<RequestMeet> {
                 ),
               ),
               Flexible(
-                child: Container(
+                child: new Container(
                   width: 50.0,
                   child: TextField(
                     style: new TextStyle(color: ageChecked ? themeColour : Colors.grey),
                     enabled: ageChecked,
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(3),
+                      new LengthLimitingTextInputFormatter(3),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
@@ -323,7 +297,7 @@ class _RequestMeetState extends State<RequestMeet> {
           ),
           RaisedButton(
             child: groupChecked && groupValue != null ?
-              Text('Send to group', style: new TextStyle(color: Colors.white)) : Text('Send to all groups', style: new TextStyle(color: Colors.white)),
+            Text('Send to group', style: new TextStyle(color: Colors.white)) : Text('Send to all groups', style: new TextStyle(color: Colors.white)),
             color: Theme.of(context).accentColor,
             elevation: 4.0,
             splashColor: Colors.blueGrey,
