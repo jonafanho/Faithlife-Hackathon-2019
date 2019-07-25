@@ -15,14 +15,12 @@ bool ageChecked = false;
 int ageStart;
 int ageEnd;
 
-
 class RequestMeet extends StatefulWidget {
   @override
   _RequestMeetState createState() => _RequestMeetState();
 }
 
 class _RequestMeetState extends State<RequestMeet> {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,62 +32,62 @@ class _RequestMeetState extends State<RequestMeet> {
         children: <Widget>[
           ListTile(
               title: Text(
-                "[Group Name]",
-              )),
+            "[Group Name]",
+          )),
           ListTile(
               title: Row(children: [
-                Text("Type:   "),
-                DropdownButton<String>(
-                  hint: Text(
-                    "Meeting Type",
+            Text("Type:   "),
+            DropdownButton<String>(
+              hint: Text(
+                "Meeting Type",
+                textAlign: TextAlign.center,
+              ),
+              style: TextStyle(
+                color: Colors.black,
+              ),
+              value: typeDropdownValue,
+              onChanged: (newValue) {
+                setState(() {
+                  typeDropdownValue = newValue;
+                });
+              },
+              items: <String>['Prayer', 'Bible', 'Service', 'Chat']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: value == typeDropdownValue
+                          ? Colors.deepOrange
+                          : Colors.black,
+                    ),
                   ),
-                  style: new TextStyle(
-                    color: Colors.black,
-                  ),
-                  value: typeDropdownValue,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      typeDropdownValue = newValue;
-                    });
-                  },
-                  items: <String>['Prayer', 'Bible', 'Service', 'Chat']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                          color: value == typeDropdownValue
-                              ? Colors.deepOrange
-                              : Colors.black,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ])),
+                );
+              }).toList(),
+            ),
+          ])),
           ListTile(
               title: Text(
-                "Message",
-              )),
+            "Message",
+          )),
           ListTile(
               title: TextField(
-                textCapitalization: TextCapitalization.sentences,
-                keyboardType: TextInputType.multiline,
-                maxLines: 3,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'Enter your message...'),
-                onChanged: (text) {
-                  message = text;
-                },
-              )),
+            textCapitalization: TextCapitalization.sentences,
+            keyboardType: TextInputType.multiline,
+            maxLines: 3,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter your message...'),
+            onChanged: (text) {
+              message = text;
+            },
+          )),
           ListTile(
               title: Text(
-                "Filters",
-              )),
+            "Filters",
+          )),
           CheckboxListTile(
             value: proximityChecked,
             onChanged: (bool value) {
@@ -101,12 +99,12 @@ class _RequestMeetState extends State<RequestMeet> {
             title: Row(children: [
               Text("within  "),
               Flexible(
-                child: new Container(
+                child: Container(
                   width: 50.0,
                   child: TextField(
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(4),
+                      LengthLimitingTextInputFormatter(4),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
@@ -133,7 +131,7 @@ class _RequestMeetState extends State<RequestMeet> {
                   "Sex",
                   textAlign: TextAlign.center,
                 ),
-                style: new TextStyle(
+                style: TextStyle(
                   color: Colors.black,
                 ),
                 value: sexValue,
@@ -149,7 +147,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     child: Text(
                       value,
                       textAlign: TextAlign.center,
-                      style: new TextStyle(
+                      style: TextStyle(
                         color: value == sexValue
                             ? Colors.deepOrange
                             : Colors.black,
@@ -170,12 +168,12 @@ class _RequestMeetState extends State<RequestMeet> {
             controlAffinity: ListTileControlAffinity.leading,
             title: Row(children: [
               Flexible(
-                child: new Container(
+                child: Container(
                   width: 50.0,
                   child: TextField(
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(3),
+                      LengthLimitingTextInputFormatter(3),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
@@ -186,12 +184,12 @@ class _RequestMeetState extends State<RequestMeet> {
               ),
               Text(" years old to "),
               Flexible(
-                child: new Container(
+                child: Container(
                   width: 50.0,
                   child: TextField(
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
-                      new LengthLimitingTextInputFormatter(3),
+                      LengthLimitingTextInputFormatter(3),
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {

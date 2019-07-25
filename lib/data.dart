@@ -55,6 +55,10 @@ class Person {
     return _name;
   }
 
+  Mood getMood() {
+    return _mood;
+  }
+
   String getPhone() {
     return _phone > 0 ? _phone.toString() : "A child of God";
   }
@@ -80,6 +84,7 @@ class Person {
     var data = json.decode(await _getData("person_" + nameId.toString()));
     if (data == null) return false;
     _name = data["name"];
+    _nameId = nameId;
     try {
       _mood = Mood.values[int.parse(data["mood"])];
       _birthYear = int.parse(data["birthYear"]);

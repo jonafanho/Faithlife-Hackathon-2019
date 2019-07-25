@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 
+import "main.dart";
 import "localizations.dart";
 
 class Profile extends StatefulWidget {
@@ -8,15 +9,53 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  String _selectedMood = moodMap[myself.getMood()];
+
   @override
   Widget build(BuildContext context) {
+    List<String> _moodStringList = new List<String>();
+    moodMap.forEach((mood, string) {
+      _moodStringList.add(string);
+    });
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("edit-profile")),
       ),
       body: ListView(
         children: <Widget>[
-          DropdownButton(items: [], onChanged: null),
+          ListTile(
+            title: DropdownButton<String>(
+                hint: Text("Set your mood!"),
+                value: _selectedMood,
+                items: _moodStringList
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedMood = value;
+                  });
+                }),
+          ),
+          ListTile(),
+          ListTile(
+            title: RaisedButton(
+              onPressed: () {
+                Mood _mood;
+                moodMap.forEach((mood, string) {
+                  if (string == _selectedMood) _mood = mood;
+                });
+                myself.setData(mood: _mood);
+                Navigator.pop(context);
+              },
+              textColor: Colors.white,
+              color: themeColour,
+              child: Text(AppLocalizations.of(context).translate("submit")),
+            ),
+          ),
         ],
       ),
     );

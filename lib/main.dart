@@ -17,6 +17,8 @@ Person myself = new Person();
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
 
+Map<Mood, String> moodMap;
+
 Future main() async {
   savedNameId = await init();
   runApp(MyApp());
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "en") //locale?.languageCode)
+          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
@@ -55,6 +57,16 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    moodMap = {
+      Mood.happy:
+          "🙂 " + AppLocalizations.of(context).translate("emotion-happy"),
+      Mood.thankful:
+          "😍 " + AppLocalizations.of(context).translate("emotion-thankful"),
+      Mood.sad: "😞 " + AppLocalizations.of(context).translate("emotion-sad"),
+      Mood.angry:
+          "😠 " + AppLocalizations.of(context).translate("emotion-angry"),
+      Mood.none: AppLocalizations.of(context).translate("emotion-none"),
+    };
     return savedNameId == 0
         ? CreateJoinGroup(
             askName: true,
@@ -81,9 +93,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   currentAccountPicture: CircleAvatar(
                     child: Text(
-                        myself.getName() != ""
-                            ? myself.getName().substring(0, 1).toUpperCase()
-                            : "",
+                        myself.getMood() != Mood.none
+                            ? moodMap[myself.getMood()].substring(0, 2)
+                            : myself.getName() != ""
+                                ? myself.getName().substring(0, 1).toUpperCase()
+                                : "",
                         style: TextStyle(fontSize: 40)),
                   ),
                 ),
