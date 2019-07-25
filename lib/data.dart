@@ -12,10 +12,10 @@ Future<int> init() async {
   return id;
 }
 
-Future<String> _getData(String method) async {
-  if (!method.startsWith("/")) method = "/" + method;
+Future<String> _getData(String route) async {
+  if (!route.startsWith("/")) route = "/" + route;
   final response = await http
-      .get("https://faithlifehackathon2019.firebaseio.com" + method + ".json")
+      .get("https://faithlifehackathon2019.firebaseio.com" + route + ".json")
       .timeout(Duration(seconds: 10));
   if (response.statusCode == 200)
     return response.body;
@@ -23,10 +23,10 @@ Future<String> _getData(String method) async {
     return "";
 }
 
-void _putData(String method, String body) async {
-  if (!method.startsWith("/")) method = "/" + method;
+void _putData(String route, String body) async {
+  if (!route.startsWith("/")) route = "/" + route;
   await http
-      .put("https://faithlifehackathon2019.firebaseio.com" + method + ".json",
+      .put("https://faithlifehackathon2019.firebaseio.com" + route + ".json",
           body: body)
       .timeout(Duration(seconds: 10));
 }
