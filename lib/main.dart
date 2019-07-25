@@ -32,12 +32,12 @@ Future main() async {
       accuracy: LocationAccuracy.POWERSAVE, interval: 20000);
   location.onLocationChanged().listen((LocationData currentLocation) {
     _pos = LatLng(currentLocation.latitude, currentLocation.longitude);
-    print("(" +
+    /*print("My location: (" +
         currentLocation.latitude.toString() +
         " " +
         currentLocation.longitude.toString() +
         ") " +
-        currentLocation.time.toString());
+        currentLocation.time.toString());*/
   });
   runApp(MyApp());
   timer = Timer.periodic(Duration(seconds: 5), (Timer t) => getRequests());
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
+          if (supportedLocale.languageCode == "en") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
