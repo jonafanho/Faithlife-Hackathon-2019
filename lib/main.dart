@@ -13,14 +13,26 @@ import "profile.dart";
 Color themeColour = Colors.deepOrange;
 int savedNameId = 0;
 Person myself = new Person();
+LatLng _pos = LatLng(47.649281, -122.358524);
+Map<Mood, String> moodMap;
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
 
-Map<Mood, String> moodMap;
-
 Future main() async {
   savedNameId = await init();
+  var location = new Location();
+  location.changeSettings(
+      accuracy: LocationAccuracy.POWERSAVE, interval: 20000);
+  location.onLocationChanged().listen((LocationData currentLocation) {
+    _pos = LatLng(currentLocation.latitude, currentLocation.longitude);
+    print("(" +
+        currentLocation.latitude.toString() +
+        " " +
+        currentLocation.longitude.toString() +
+        ") " +
+        currentLocation.time.toString());
+  });
   runApp(MyApp());
 }
 
@@ -55,6 +67,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  GoogleMapController _controller;
+
   @override
   Widget build(BuildContext context) {
     moodMap = {
@@ -75,8 +89,10 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
                 title: Text(AppLocalizations.of(context).translate("home"))),
             body: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(47.649281, -122.358524), zoom: 10),
+              onMapCreated: (controller) {
+                _controller = controller;
+              },
+              initialCameraPosition: CameraPosition(target: _pos, zoom: 10),
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
             ),
@@ -171,9 +187,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 FloatingActionButton(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black54,
-                  onPressed: () {},
+                  onPressed: () {
+                    centre();
+                  },
                   heroTag: null,
-                  tooltip: "Centre map",
+                  tooltip: AppLocalizations.of(context).translate("centre-map"),
                   child: Icon(Icons.my_location),
                 ),
                 SizedBox(height: 16),
@@ -184,11 +202,18 @@ class _MyHomePageState extends State<MyHomePage> {
                         new MaterialPageRoute(
                             builder: (context) => RequestMeet()));
                   },
-                  tooltip: "Create a request",
+                  tooltip: AppLocalizations.of(context).translate("create-request"),
                   child: Icon(Icons.add),
                 ),
               ],
             ),
           );
+  }
+
+  void centre() async {
+    _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      target: _pos,
+      zoom: 15,
+    )));
   }
 }

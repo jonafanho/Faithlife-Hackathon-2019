@@ -1,8 +1,10 @@
 {
   "address-book": "通訊錄",
   "back": "上一頁",
+  "centre-map": "返回地圖中心",
   "create-group": "建立群組",
   "create-join": "建立或加入群組",
+  "create-request": "建立請求",
   "edit-profile": "編輯個人檔案",
   "emotion-angry": "憤怒",
   "emotion-happy": "開心",
