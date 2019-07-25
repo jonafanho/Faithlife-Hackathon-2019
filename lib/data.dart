@@ -182,6 +182,9 @@ class Person {
       _birthDay = int.parse(data["birthDay"]);
       _sex = Sex.values[int.parse(data["sex"])];
       _phone = int.parse(data["phone"]);
+      data["groups"].forEach((key, value) {
+        _groups.add(key.toString());
+      });
     } catch (e) {
       _mood = Mood.none;
       _birthYear = -1;
@@ -190,7 +193,6 @@ class Person {
       _sex = Sex.none;
       _phone = -1;
     }
-    print(data);
     return true;
   }
 
