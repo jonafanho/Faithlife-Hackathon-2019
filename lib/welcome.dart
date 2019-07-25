@@ -117,24 +117,7 @@ class _NamePhoneList extends StatelessWidget {
           title: RaisedButton(
             onPressed: () {
               if (_name == "")
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text(AppLocalizations.of(context)
-                        .translate("name-error-title")),
-                    content: Text(AppLocalizations.of(context)
-                        .translate("name-error-text")),
-                    actions: <Widget>[
-                      FlatButton(
-                        child:
-                            Text(AppLocalizations.of(context).translate("ok")),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  ),
-                );
+                showNameErrorDialog(context);
               else {
                 myself.generate(_name);
                 Navigator.push(

@@ -63,6 +63,13 @@ class Person {
     return _sex;
   }
 
+  DateTime getBirthday() {
+    if (_birthYear > 0 && _birthMonth > 0 && _birthDay > 0)
+      return DateTime(_birthYear, _birthMonth, _birthDay);
+    else
+      return null;
+  }
+
   String getPhone() {
     return _phone > 0 ? _phone.toString() : "";
   }
@@ -70,17 +77,17 @@ class Person {
   void setData({
     String name,
     Mood mood,
-    int birthYear,
-    int birthMonth,
-    int birthDay,
+    DateTime birthday,
     int phone,
     Sex sex,
   }) {
     if (name != null) _name = name;
     if (mood != null) _mood = mood;
-    if (birthYear != null) _birthYear = birthYear;
-    if (birthMonth != null) _birthMonth = birthMonth;
-    if (birthDay != null) _birthDay = birthDay;
+    if (birthday != null) {
+      _birthYear = birthday.year;
+      _birthMonth = birthday.month;
+      _birthDay = birthday.day;
+    }
     if (phone != null) _phone = phone;
     if (sex != null) _sex = sex;
     _writeToDatabase();

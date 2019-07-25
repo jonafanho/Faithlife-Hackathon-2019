@@ -17,6 +17,7 @@ class _ProfileState extends State<Profile> {
       new TextEditingController(text: myself.getName());
   TextEditingController _controllerPhone =
       new TextEditingController(text: myself.getPhone());
+  DateTime _birthday = myself.getBirthday();
 
   @override
   Widget build(BuildContext context) {
@@ -98,18 +99,51 @@ class _ProfileState extends State<Profile> {
                 );
               }).toList(),
             ),
+            contentPadding: EdgeInsets.all(16),
           ),
-          ListTile(),
+          ListTile(
+            leading: Icon(Icons.calendar_today),
+            title: Text(AppLocalizations.of(context).translate("birthday") +
+                " (" +
+                AppLocalizations.of(context).translate("optional") +
+                ")"),
+            subtitle: RaisedButton(
+              onPressed: () async {
+                _birthday = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                  initialDate: _birthday == null
+                      ? DateTime.now().subtract(Duration(days: 1))
+                      : _birthday,
+                  initialDatePickerMode: DatePickerMode.year,
+                );
+                setState(() {});
+              },
+              child: Text(_birthday == null
+                  ? AppLocalizations.of(context).translate("sex-none")
+                  : _birthday.day.toString() +
+                      "/" +
+                      _birthday.month.toString() +
+                      "/" +
+                      _birthday.year.toString()),
+            ),
+          ),
           ListTile(),
           ListTile(
             title: RaisedButton(
               onPressed: () {
-                myself.setData(
-                    name: _name,
-                    mood: getKeyFromMap(moodMap, _mood),
-                    phone: int.parse(_phone),
-                    sex: getKeyFromMap(sexMap, _sex));
-                Navigator.pop(context);
+                if (_name == "")
+                  showNameErrorDialog(context);
+                else {
+                  myself.setData(
+                      name: _name,
+                      mood: getKeyFromMap(moodMap, _mood),
+                      birthday: _birthday,
+                      phone: _phone == "" ? -1 : int.parse(_phone),
+                      sex: getKeyFromMap(sexMap, _sex));
+                  Navigator.pop(context);
+                }
               },
               textColor: Colors.white,
               color: themeColour,

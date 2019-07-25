@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "en") //locale?.languageCode)
+          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
@@ -237,4 +237,23 @@ class _MyHomePageState extends State<MyHomePage> {
 T getKeyFromMap<T>(Map<T, String> map, String sex) {
   for (T s in map.keys) if (map[s] == sex) return s;
   return null;
+}
+
+void showNameErrorDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            title: Text(
+                AppLocalizations.of(context).translate("name-error-title")),
+            content:
+                Text(AppLocalizations.of(context).translate("name-error-text")),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(AppLocalizations.of(context).translate("ok")),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          ));
 }
