@@ -9,6 +9,7 @@ import "data.dart";
 import "welcome.dart";
 import "request.dart";
 import "profile.dart";
+import 'dart:async';
 
 Color themeColour = Colors.deepOrange;
 int savedNameId = 0;
@@ -20,6 +21,9 @@ List<String> moodStringList, sexStringList;
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
+
+Timer timer;
+List<String> requestsOfMyGroups = new List<String>();
 
 Future main() async {
   savedNameId = await init();
@@ -36,6 +40,7 @@ Future main() async {
         currentLocation.time.toString());
   });
   runApp(MyApp());
+  timer = Timer.periodic(Duration(seconds: 5), (Timer t) => getRequests());
 }
 
 class MyApp extends StatelessWidget {
