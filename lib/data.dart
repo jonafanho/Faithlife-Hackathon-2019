@@ -1,6 +1,7 @@
 import "dart:convert";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
+import "dart:math";
 
 import "main.dart";
 
@@ -31,22 +32,73 @@ void _putData(String route, String body) async {
       .timeout(Duration(seconds: 10));
 }
 
-void createMeetRequest(String meetingType, String message, int distance, int ageStart, int ageEnd, String sex, List<String> selectedGroups)
-{
+Future createGroup(String name) async {
+  String groups = await _getData("groups");
+  String roomCode;
+  Random r = new Random();
+  do {
+    roomCode = r.nextInt(100000000).toString();
+  } while (groups.contains(roomCode));
+  String body = '{"name":"';
+  body += name;
+  body += '"}';
+  _putData("group_" + roomCode, body);
+  _putData("groups", _addToExistingJson(groups, roomCode));
+  await joinGroup(roomCode);
+}
+
+Future joinGroup(String roomCode) async {
+  await _addToList("group_" + roomCode + "/people", savedNameId.toString());
+  await _addToList("person_" + savedNameId.toString() + "/groups", roomCode);
+  if (!myself._groups.contains(roomCode)) myself._groups.add(roomCode);
+}
+
+/*Future leaveGroup(String roomCode) async {
+  _putData("group_" + roomCode + "/people/" + savedNameId.toString(), '{}');
+}*/
+
+Future _addToList(String route, String newData) async {
+  String existing = await _getData(route);
+  if (existing == "null") existing = "{";
+  _putData(route, _addToExistingJson(existing, newData));
+}
+
+String _addToExistingJson(String existing, String add) {
+  return existing.replaceAll("}", ",") + '"' + add + '":"true"}';
+}
+
+void createMeetRequest(String meetingType, String message, int distance,
+    int ageStart, int ageEnd, String sex, List<String> selectedGroups) {
   String actualSelectedGroups = selectedGroups.toString().replaceAll('[', '{"');
   actualSelectedGroups = actualSelectedGroups.replaceAll(', ', '": "true", "');
   actualSelectedGroups = actualSelectedGroups.replaceAll(']', '": "true"}');
 
   String route = "RequestTest4";
-  String body = '{"age_lower": "'+ageStart.toString()+'", '+
-      '"age_upper": "'+ageEnd.toString()+'", '+
-      '"answered": "false", '+
-      '"distance": "'+distance.toString()+'", '+
-      '"message": "'+message+'", '+
-      '"sender": "'+savedNameId.toString()+'", '+
-      '"sex": "'+sex+'", '+
-      '"type": "'+meetingType+'", '+
-      '"groups": '+actualSelectedGroups+'}';
+  String body = '{"age_lower": "' +
+      ageStart.toString() +
+      '", ' +
+      '"age_upper": "' +
+      ageEnd.toString() +
+      '", ' +
+      '"answered": "false", ' +
+      '"distance": "' +
+      distance.toString() +
+      '", ' +
+      '"message": "' +
+      message +
+      '", ' +
+      '"sender": "' +
+      savedNameId.toString() +
+      '", ' +
+      '"sex": "' +
+      sex +
+      '", ' +
+      '"type": "' +
+      meetingType +
+      '", ' +
+      '"groups": ' +
+      actualSelectedGroups +
+      '}';
   print(body);
   _putData(route, body);
 }
@@ -57,6 +109,7 @@ class Person {
   Mood _mood = Mood.none;
   int _birthYear = -1, _birthMonth = -1, _birthDay = -1, _phone = -1;
   Sex _sex = Sex.none;
+  List<String> _groups = new List<String>();
 
   void generate(String n) {
     _nameId = DateTime.now().millisecondsSinceEpoch;
@@ -92,6 +145,10 @@ class Person {
 
   String getPhone() {
     return _phone > 0 ? _phone.toString() : "";
+  }
+
+  List<String> getGroups() {
+    return _groups;
   }
 
   void setData({

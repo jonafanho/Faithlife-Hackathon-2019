@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
+import "dart:convert";
 
 import "main.dart";
 import "localizations.dart";
@@ -31,6 +32,8 @@ class _CreateJoinGroupList extends StatefulWidget {
 
 class _CreateJoinGroupListState extends State<_CreateJoinGroupList> {
   WelcomeChoice _choice = WelcomeChoice.joinRoom;
+  bool _buttonEnabled = false;
+  String _text = "";
 
   @override
   Widget build(BuildContext context) {
@@ -74,15 +77,29 @@ class _CreateJoinGroupListState extends State<_CreateJoinGroupList> {
             ),
             autocorrect: false,
             maxLength: _choice == WelcomeChoice.joinRoom ? 8 : 100,
+            onChanged: (value) {
+              _text = value;
+              setState(() {
+                _buttonEnabled = value.length > 0;
+              });
+            },
           ),
         ),
         ListTile(
           title: RaisedButton(
-            onPressed: () {
-              while (Navigator.canPop(context)) Navigator.pop(context);
-              //Navigator.push(context,
-              //  MaterialPageRoute(builder: (context) => MyHomePage()));
-            },
+            onPressed: _buttonEnabled
+                ? () async {
+                    switch (_choice) {
+                      case WelcomeChoice.createGroup:
+                        await createGroup(_text);
+                        break;
+                      case WelcomeChoice.joinRoom:
+                        await joinGroup(_text);
+                        break;
+                    }
+                    while (Navigator.canPop(context)) Navigator.pop(context);
+                  }
+                : null,
             textColor: Colors.white,
             color: themeColour,
             child: Text(AppLocalizations.of(context).translate("submit")),

@@ -253,12 +253,12 @@ class _RequestMeetState extends State<RequestMeet> {
               textColor: Colors.white,
               color: themeColour,
               onPressed: () {
-                Navigator.pop(context);
                 if(_group != "All groups") {
                   _selectedGroups.clear();
                   _selectedGroups.add(_group);
                 }
                 createMeetRequest(_meetingTypeValue, _message, _distance, _ageStart, _ageEnd, _sexValue, _selectedGroups);
+                Navigator.pop(context);
               },
             ),
           ),
