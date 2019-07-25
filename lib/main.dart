@@ -7,6 +7,7 @@ import "package:location/location.dart";
 import "localizations.dart";
 import "data.dart";
 import "welcome.dart";
+import "request.dart";
 
 Color themeColour = Colors.deepOrange;
 int savedNameId = 0;
@@ -158,7 +159,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 SizedBox(height: 16),
                 FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => RequestMeet()));
+                  },
                   tooltip: "Create a request",
                   child: Icon(Icons.add),
                 ),
