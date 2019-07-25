@@ -1,6 +1,6 @@
-# hackathon
+# Hackathon
 
-A new Flutter application.
+A Flutter mobile application developed by Nick Liu and Jonathan Ho.
 
 ## Getting Started
 
