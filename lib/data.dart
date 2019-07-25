@@ -8,6 +8,7 @@ Future<int> init() async {
   final _prefs = await SharedPreferences.getInstance();
   int id = _prefs.getInt("nameId");
   if (id == null) return 0;
+  if (!await myself._getPersonFromDatabase(id)) return 0;
   return id;
 }
 
@@ -24,9 +25,10 @@ Future<String> _getData(String method) async {
 
 void _putData(String method, String body) async {
   if (!method.startsWith("/")) method = "/" + method;
-  await http.put(
-      "https://faithlifehackathon2019.firebaseio.com" + method + ".json",
-      body: body);
+  await http
+      .put("https://faithlifehackathon2019.firebaseio.com" + method + ".json",
+          body: body)
+      .timeout(Duration(seconds: 10));
 }
 
 class Person {
@@ -39,6 +41,7 @@ class Person {
   void generate(String n) {
     _nameId = DateTime.now().millisecondsSinceEpoch;
     _name = n;
+    savedNameId = _nameId;
     _setPreference();
     _writeToDatabase();
   }
@@ -50,6 +53,10 @@ class Person {
 
   String getName() {
     return _name;
+  }
+
+  String getPhone() {
+    return _phone > 0 ? _phone.toString() : "A child of God";
   }
 
   void setData({
@@ -69,9 +76,18 @@ class Person {
     _writeToDatabase();
   }
 
-  void getPersonFromDatabase(int nameId) async {
+  Future<bool> _getPersonFromDatabase(int nameId) async {
     var data = json.decode(await _getData("person_" + nameId.toString()));
+    if (data == null) return false;
+    _name = data["name"];
+    //_mood = data["mood"];
+    _birthYear = int.parse(data["birthYear"]);
+    _birthMonth = int.parse(data["birthMonth"]);
+    _birthDay = int.parse(data["birthDay"]);
+    //_sex = data["sex"];
+    _phone = int.parse(data["phone"]);
     print(data);
+    return true;
   }
 
   void _writeToDatabase() {

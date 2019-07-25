@@ -9,14 +9,14 @@ import "data.dart";
 import "welcome.dart";
 
 Color themeColour = Colors.deepOrange;
-int _savedNameId = 0;
+int savedNameId = 0;
 Person myself = new Person();
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
 
 Future main() async {
-  _savedNameId = await init();
+  savedNameId = await init();
   runApp(MyApp());
 }
 
@@ -53,7 +53,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return _savedNameId == 0
+    return savedNameId == 0
         ? CreateJoinGroup(
             askName: true,
           )
@@ -72,9 +72,12 @@ class _MyHomePageState extends State<MyHomePage> {
               children: <Widget>[
                 UserAccountsDrawerHeader(
                   accountName: Text(myself.getName()),
-                  accountEmail: Text("+852 2345 6789"),
+                  accountEmail: Text(myself.getPhone()),
                   currentAccountPicture: CircleAvatar(
-                    child: Text(myself.getName().substring(0, 1).toUpperCase(),
+                    child: Text(
+                        myself.getName() != ""
+                            ? myself.getName().substring(0, 1).toUpperCase()
+                            : "",
                         style: TextStyle(fontSize: 40)),
                   ),
                 ),
