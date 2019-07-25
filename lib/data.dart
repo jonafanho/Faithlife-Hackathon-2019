@@ -63,11 +63,10 @@ Future joinGroup(String roomCode) async {
 
 void getRequests() async {
   requestsOfMyGroups.clear();
-  List<String> myGroups = myself._groups;
+  List<String> myGroups = myself._groups.keys;
   //print("5 seconds passed, pinging...");
-  for(String group in myGroups)
-  {
-    String route = 'group_'+group+'/requests';
+  for (String group in myGroups) {
+    String route = 'group_' + group + '/requests';
     var response = await _getData(route);
     var requestMap = json.decode(response);
     requestMap.forEach((key, value) {
