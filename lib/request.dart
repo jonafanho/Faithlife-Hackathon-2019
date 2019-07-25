@@ -11,6 +11,9 @@ bool proximityChecked = false;
 int proximityValue;
 bool sexChecked = false;
 String sexValue;
+bool ageChecked = false;
+int ageStart;
+int ageEnd;
 
 
 class RequestMeet extends StatefulWidget {
@@ -116,7 +119,7 @@ class _RequestMeetState extends State<RequestMeet> {
             ]),
           ),
           CheckboxListTile(
-            value: proximityChecked,
+            value: sexChecked,
             onChanged: (bool value) {
               setState(() {
                 sexChecked = value;
@@ -124,7 +127,7 @@ class _RequestMeetState extends State<RequestMeet> {
             },
             controlAffinity: ListTileControlAffinity.leading,
             title: Row(children: [
-              Text("gender  "),
+              Text("Gender:  "),
               DropdownButton<String>(
                 hint: Text(
                   "Sex",
@@ -147,7 +150,7 @@ class _RequestMeetState extends State<RequestMeet> {
                       value,
                       textAlign: TextAlign.center,
                       style: new TextStyle(
-                        color: value == typeDropdownValue
+                        color: value == sexValue
                             ? Colors.deepOrange
                             : Colors.black,
                       ),
@@ -155,6 +158,49 @@ class _RequestMeetState extends State<RequestMeet> {
                   );
                 }).toList(),
               ),
+            ]),
+          ),
+          CheckboxListTile(
+            value: ageChecked,
+            onChanged: (bool value) {
+              setState(() {
+                ageChecked = value;
+              });
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Row(children: [
+              Flexible(
+                child: new Container(
+                  width: 50.0,
+                  child: TextField(
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      new LengthLimitingTextInputFormatter(3),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      ageStart = int.parse(text);
+                    },
+                  ),
+                ),
+              ),
+              Text(" years old to "),
+              Flexible(
+                child: new Container(
+                  width: 50.0,
+                  child: TextField(
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly,
+                      new LengthLimitingTextInputFormatter(3),
+                    ],
+                    keyboardType: TextInputType.number,
+                    onChanged: (text) {
+                      ageEnd = int.parse(text);
+                    },
+                  ),
+                ),
+              ),
+              Text(" years old"),
             ]),
           ),
         ],
