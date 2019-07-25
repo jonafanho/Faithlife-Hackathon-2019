@@ -24,7 +24,7 @@ Future<String> _getData(String route) async {
     return "";
 }
 
-void _putData(String route, String body) async {
+Future _putData(String route, String body) async {
   if (!route.startsWith("/")) route = "/" + route;
   await http
       .put("https://faithlifehackathon2019.firebaseio.com" + route + ".json",
@@ -42,15 +42,19 @@ Future createGroup(String name) async {
   String body = '{"name":"';
   body += name;
   body += '"}';
-  _putData("group_" + roomCode, body);
-  _putData("groups", _addToExistingJson(groups, roomCode));
+  await _putData("group_" + roomCode, body);
+  await _putData("groups", _addToExistingJson(groups, roomCode));
   await joinGroup(roomCode);
 }
 
 Future joinGroup(String roomCode) async {
   await _addToList("group_" + roomCode + "/people", savedNameId.toString());
   await _addToList("person_" + savedNameId.toString() + "/groups", roomCode);
-  if (!myself._groups.contains(roomCode)) myself._groups.add(roomCode);
+  if (!myself._groups.containsKey(roomCode))
+    myself._groups.addAll({
+      roomCode:
+          json.decode(await _getData("group_" + roomCode))["name"].toString()
+    });
 }
 
 /*Future leaveGroup(String roomCode) async {
@@ -126,7 +130,7 @@ class Person {
   Mood _mood = Mood.none;
   int _birthYear = -1, _birthMonth = -1, _birthDay = -1, _phone = -1;
   Sex _sex = Sex.none;
-  List<String> _groups = new List<String>();
+  Map<String, String> _groups = new Map<String, String>();
 
   void generate(String n) {
     _nameId = DateTime.now().millisecondsSinceEpoch;
@@ -164,7 +168,7 @@ class Person {
     return _phone > 0 ? _phone.toString() : "";
   }
 
-  List<String> getGroups() {
+  Map<String, String> getGroups() {
     return _groups;
   }
 
@@ -199,8 +203,12 @@ class Person {
       _birthDay = int.parse(data["birthDay"]);
       _sex = Sex.values[int.parse(data["sex"])];
       _phone = int.parse(data["phone"]);
-      data["groups"].forEach((key, value) {
-        _groups.add(key.toString());
+      data["groups"].forEach((key, value) async {
+        _groups.addAll({
+          key.toString(): json
+              .decode(await _getData("group_" + key.toString()))["name"]
+              .toString()
+        });
       });
     } catch (e) {
       _mood = Mood.none;

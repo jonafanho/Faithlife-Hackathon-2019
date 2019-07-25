@@ -217,10 +217,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(height: 16),
                 FloatingActionButton(
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => RequestMeet()));
+                    if (myself.getGroups().length > 0)
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => RequestMeet()));
                   },
                   tooltip:
                       AppLocalizations.of(context).translate("create-request"),

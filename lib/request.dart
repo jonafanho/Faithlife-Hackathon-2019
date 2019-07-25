@@ -13,22 +13,19 @@ class RequestMeet extends StatefulWidget {
 
 class _RequestMeetState extends State<RequestMeet> {
   String _meetingTypeValue;
-  String _message;
+  String _message = "";
   bool _proximityChecked = false;
-  int _distance;
+  int _distance = -1;
   String _sexValue;
   bool _ageStartChecked = false, _ageEndChecked = false;
   int _ageStart, _ageEnd;
-  List<String> _groups;
-  List<String> _selectedGroups;
-  String _group;
+  String _selectedGroup;
 
   @override
   Widget build(BuildContext context) {
     if (_sexValue == null) _sexValue = sexStringList.first;
-    _groups = ["All groups", "Group1", "Group2", "Group3"];
-    _selectedGroups = ["Group1", "Group2", "Group3"];
-    if (_group == null) _group = _groups.first;
+    if (_selectedGroup == null)
+      _selectedGroup = myself.getGroups().values.first;
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("create-request")),
@@ -229,14 +226,17 @@ class _RequestMeetState extends State<RequestMeet> {
           ListTile(
             title: Text("Target:"),
             subtitle: DropdownButton<String>(
-              value: _group,
+              value: _selectedGroup,
               onChanged: (String newValue) {
                 setState(() {
-                  _group = newValue;
+                  _selectedGroup = newValue;
                 });
               },
               isExpanded: true,
-              items: _groups.map<DropdownMenuItem<String>>((String value) {
+              items: myself
+                  .getGroups()
+                  .values
+                  .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),
@@ -247,17 +247,14 @@ class _RequestMeetState extends State<RequestMeet> {
           ),
           ListTile(
             title: RaisedButton(
-              child: _group == _groups.first
-                  ? Text('Send to all groups')
-                  : Text('Send to "' + _group + '"'),
+              child: Text('Send to "' + _selectedGroup + '"'),
               textColor: Colors.white,
               color: themeColour,
               onPressed: () {
-                if(_group != "All groups") {
-                  _selectedGroups.clear();
-                  _selectedGroups.add(_group);
-                }
-                createMeetRequest(_meetingTypeValue, _message, _distance, _ageStart, _ageEnd, _sexValue, _selectedGroups);
+                List<String> _groupList = new List<String>();
+                _groupList.add(_selectedGroup);
+                createMeetRequest(_meetingTypeValue, _message, _distance,
+                    _ageStart, _ageEnd, _sexValue, _groupList);
                 Navigator.pop(context);
               },
             ),
