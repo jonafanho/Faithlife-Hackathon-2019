@@ -31,6 +31,26 @@ void _putData(String route, String body) async {
       .timeout(Duration(seconds: 10));
 }
 
+void createMeetRequest(String meetingType, String message, int distance, int ageStart, int ageEnd, String sex, List<String> selectedGroups)
+{
+  String actualSelectedGroups = selectedGroups.toString().replaceAll('[', '{"');
+  actualSelectedGroups = actualSelectedGroups.replaceAll(', ', '": "true", "');
+  actualSelectedGroups = actualSelectedGroups.replaceAll(']', '": "true"}');
+
+  String route = "RequestTest4";
+  String body = '{"age_lower": "'+ageStart.toString()+'", '+
+      '"age_upper": "'+ageEnd.toString()+'", '+
+      '"answered": "false", '+
+      '"distance": "'+distance.toString()+'", '+
+      '"message": "'+message+'", '+
+      '"sender": "'+savedNameId.toString()+'", '+
+      '"sex": "'+sex+'", '+
+      '"type": "'+meetingType+'", '+
+      '"groups": '+actualSelectedGroups+'}';
+  print(body);
+  _putData(route, body);
+}
+
 class Person {
   String _name = "";
   int _nameId = 0;

@@ -16,17 +16,18 @@ class _RequestMeetState extends State<RequestMeet> {
   String _message;
   bool _proximityChecked = false;
   int _distance;
-  bool _sexChecked = false;
   String _sexValue;
   bool _ageStartChecked = false, _ageEndChecked = false;
   int _ageStart, _ageEnd;
   List<String> _groups;
+  List<String> _selectedGroups;
   String _group;
 
   @override
   Widget build(BuildContext context) {
     if (_sexValue == null) _sexValue = sexStringList.first;
     _groups = ["All groups", "Group1", "Group2", "Group3"];
+    _selectedGroups = ["Group1", "Group2", "Group3"];
     if (_group == null) _group = _groups.first;
     return Scaffold(
       appBar: AppBar(
@@ -253,7 +254,11 @@ class _RequestMeetState extends State<RequestMeet> {
               color: themeColour,
               onPressed: () {
                 Navigator.pop(context);
-
+                if(_group != "All groups") {
+                  _selectedGroups.clear();
+                  _selectedGroups.add(_group);
+                }
+                createMeetRequest(_meetingTypeValue, _message, _distance, _ageStart, _ageEnd, _sexValue, _selectedGroups);
               },
             ),
           ),
