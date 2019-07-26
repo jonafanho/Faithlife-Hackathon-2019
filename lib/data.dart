@@ -67,7 +67,7 @@ Future<String> joinGroup(String roomCode) async {
 void getRequestsToMe() async {
   print(
       "----------------------------------------------------------------------------------------");
-  print("10 seconds passed, pinging...");
+  //print("10 seconds passed, pinging...");
   requestsOfMyGroups.clear();
   requestsForMe.clear();
 
@@ -77,7 +77,7 @@ void getRequestsToMe() async {
     myGroups.add(key);
   });
 
-  print("myGroups: " + myGroups.toString());
+  //print("myGroups: " + myGroups.toString());
 
   //Getting all requests in my groups
   for (String group in myGroups) {
@@ -89,7 +89,7 @@ void getRequestsToMe() async {
       requestMap.forEach((key, value) {
         requestsOfMyGroups.add(key.toString());
       });
-      print('Requests from my Groups: ' + requestsOfMyGroups.toString());
+      //print('Requests from my Groups: ' + requestsOfMyGroups.toString());
     }
   }
 
@@ -97,7 +97,7 @@ void getRequestsToMe() async {
   for (String request in requestsOfMyGroups) {
     String route = 'request_'+request;
     String response = await _getData(route);
-    print("Reponse: " + response);
+    //print("Reponse: " + response);
     if (response != "null") {
       var requestMap = json.decode(response);
       bool fitsMe = true;
@@ -127,7 +127,7 @@ void getRequestsToMe() async {
       }
 
       //Get the sender's name
-      if (fitsMe && requestMap.containsKey("sender") && requestMap.containsKey("type")) {
+      if (fitsMe && requestMap.containsKey("sender") && int.parse(requestMap["sender"]) != savedNameId && requestMap.containsKey("type")) {
         String personRoute = 'person_' + requestMap["sender"].toString();
         String personResponse = await _getData(personRoute);
         var personMap = json.decode(personResponse);
