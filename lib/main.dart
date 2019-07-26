@@ -34,6 +34,10 @@ Future main() async {
       accuracy: LocationAccuracy.POWERSAVE, interval: 20000);
   location.onLocationChanged().listen((LocationData currentLocation) {
     _pos = LatLng(currentLocation.latitude, currentLocation.longitude);
+    myself.setData(
+      latitude: currentLocation.latitude,
+      longitude: currentLocation.longitude,
+    );
     /*print("My location: (" +
         currentLocation.latitude.toString() +
         " " +

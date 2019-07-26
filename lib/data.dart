@@ -183,6 +183,7 @@ String _addToExistingJson(String existing, String add) {
 }
 
 String listToJson(List<String> s) {
+  if (s.length == 0) return "crash";
   String body = "";
   s.forEach((value) {
     body += '"' + value + '":"true",';
@@ -194,7 +195,6 @@ String listToJson(List<String> s) {
 void createMeetRequest(String meetingType, String message, int distance,
     int ageLower, int ageUpper, int sex, List<String> selectedGroups) async {
   String requestId = DateTime.now().millisecondsSinceEpoch.toString();
-  requestId = requestId.substring(4, requestId.length);
   String body = '{';
   if (meetingType != null) {
     body += '"type":"';
@@ -256,7 +256,7 @@ class Person {
   int _birthYear = -1, _birthMonth = -1, _birthDay = -1, _phone = -1;
   Sex _sex = Sex.none;
   Map<String, String> _groups = new Map<String, String>();
-  int latitude, longitude;
+  double _latitude = 0, _longitude = 0;
 
   void generate(String n) {
     _nameId = DateTime.now().millisecondsSinceEpoch;
@@ -298,13 +298,14 @@ class Person {
     return _groups;
   }
 
-  void setData({
-    String name,
-    Mood mood,
-    DateTime birthday,
-    int phone,
-    Sex sex,
-  }) {
+  void setData(
+      {String name,
+      Mood mood,
+      DateTime birthday,
+      int phone,
+      Sex sex,
+      double latitude,
+      double longitude}) {
     if (name != null) _name = name;
     if (mood != null) _mood = mood;
     if (birthday != null) {
@@ -315,6 +316,8 @@ class Person {
       _birthYear = _birthMonth = _birthDay = -1;
     if (phone != null) _phone = phone;
     if (sex != null) _sex = sex;
+    if (latitude != null) _latitude = latitude;
+    if (longitude != null) _longitude = longitude;
     _writeToDatabase();
   }
 
@@ -363,6 +366,10 @@ class Person {
     body += _sex.index.toString();
     body += '","phone":"';
     body += _phone.toString();
+    body += '","latitude":"';
+    body += _latitude.toString();
+    body += '","longitude":"';
+    body += _longitude.toString();
     body += '","groups":';
     body += listToJson(_groups.keys.toList());
     body += "}";
