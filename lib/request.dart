@@ -19,6 +19,7 @@ class _RequestMeetState extends State<RequestMeet> {
   String _sexValue;
   bool _ageStartChecked = false, _ageEndChecked = false;
   int _ageStart, _ageEnd;
+  bool _groupChecked = false;
   String _selectedGroup;
 
   @override
@@ -105,7 +106,6 @@ class _RequestMeetState extends State<RequestMeet> {
                       style: TextStyle(
                         color: _proximityChecked ? themeColour : Colors.grey,
                       ),
-                      enabled: _proximityChecked,
                       inputFormatters: <TextInputFormatter>[
                         WhitelistingTextInputFormatter.digitsOnly,
                         LengthLimitingTextInputFormatter(4),
@@ -145,7 +145,9 @@ class _RequestMeetState extends State<RequestMeet> {
                 child: Container(
                   width: 50.0,
                   child: TextField(
-                    enabled: _ageStartChecked,
+                    style: TextStyle(
+                      color: _ageStartChecked ? themeColour : Colors.grey,
+                    ),
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(3),
@@ -184,7 +186,9 @@ class _RequestMeetState extends State<RequestMeet> {
                 child: Container(
                   width: 50.0,
                   child: TextField(
-                    enabled: _ageEndChecked,
+                    style: TextStyle(
+                      color: _ageEndChecked ? themeColour : Colors.grey,
+                    ),
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(3),
@@ -223,36 +227,62 @@ class _RequestMeetState extends State<RequestMeet> {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 16),
           ),
-          ListTile(
-            title: Text("Target:"),
-            subtitle: DropdownButton<String>(
-              value: _selectedGroup,
-              onChanged: (String newValue) {
-                setState(() {
-                  _selectedGroup = newValue;
-                });
-              },
-              isExpanded: true,
-              items: myself
-                  .getGroups()
-                  .values
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 16),
+          CheckboxListTile(
+            value: _groupChecked,
+            onChanged: (bool value) {
+              setState(() {
+                _groupChecked = value;
+              });
+            },
+            controlAffinity: ListTileControlAffinity.leading,
+            title: Row(children: [
+              Text(
+                AppLocalizations.of(context).translate("send-only") + " ",
+                style: TextStyle(
+                  color: _groupChecked ? Colors.black : Colors.grey,
+                ),
+              ),
+              Flexible(
+                child: DropdownButton<String>(
+                  value: _selectedGroup,
+                  style: TextStyle(
+                    color: _groupChecked ? themeColour : Colors.grey,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      _selectedGroup = newValue;
+                    });
+                  },
+                  isExpanded: true,
+                  items: myself
+                      .getGroups()
+                      .values
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ]),
           ),
           ListTile(
             title: RaisedButton(
-              child: Text('Send to "' + _selectedGroup + '"'),
+              child: Text(AppLocalizations.of(context).translate("send-to") +
+                  " " +
+                  (_groupChecked
+                      ? '"' + _selectedGroup + '"'
+                      : AppLocalizations.of(context).translate("all-groups"))),
               textColor: Colors.white,
               color: themeColour,
               onPressed: () {
                 List<String> _groupList = new List<String>();
-                _groupList.add(_selectedGroup);
+                if (_groupChecked) {
+                  _groupList.clear();
+                  _groupList.add(_selectedGroup);
+                } else
+                  _groupList.addAll(myself.getGroups().values);
                 createMeetRequest(_meetingTypeValue, _message, _distance,
                     _ageStart, _ageEnd, _sexValue, _groupList);
                 Navigator.pop(context);

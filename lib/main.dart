@@ -222,6 +222,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           context,
                           new MaterialPageRoute(
                               builder: (context) => RequestMeet()));
+                    else
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CreateJoinGroup(
+                                    askName: false,
+                                  )));
                   },
                   tooltip:
                       AppLocalizations.of(context).translate("create-request"),
@@ -245,14 +252,12 @@ T getKeyFromMap<T>(Map<T, String> map, String sex) {
   return null;
 }
 
-void showNameErrorDialog(BuildContext context) {
+void showErrorDialog(BuildContext context, String title, String text) {
   showDialog(
       context: context,
       builder: (context) => AlertDialog(
-            title: Text(
-                AppLocalizations.of(context).translate("name-error-title")),
-            content:
-                Text(AppLocalizations.of(context).translate("name-error-text")),
+            title: Text(title),
+            content: Text(text),
             actions: <Widget>[
               FlatButton(
                 child: Text(AppLocalizations.of(context).translate("ok")),

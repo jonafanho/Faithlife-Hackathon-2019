@@ -28,6 +28,18 @@ class _ProfileState extends State<Profile> {
       body: ListView(
         children: <Widget>[
           ListTile(
+            leading: Icon(Icons.person),
+            title: Text(AppLocalizations.of(context).translate("name")),
+            subtitle: TextField(
+              enabled: true,
+              controller: _controllerName,
+              onChanged: (value) {
+                _name = value;
+              },
+            ),
+            contentPadding: EdgeInsets.all(16),
+          ),
+          ListTile(
             leading: Icon(Icons.mood),
             title: Text(AppLocalizations.of(context).translate("mood")),
             subtitle: DropdownButton<String>(
@@ -45,16 +57,12 @@ class _ProfileState extends State<Profile> {
                 );
               }).toList(),
             ),
-            contentPadding: EdgeInsets.all(16),
-          ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: Text(AppLocalizations.of(context).translate("name")),
-            subtitle: TextField(
-              enabled: true,
-              controller: _controllerName,
-              onChanged: (value) {
-                _name = value;
+            trailing: IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                setState(() {
+                  _mood = moodMap[Mood.none];
+                });
               },
             ),
             contentPadding: EdgeInsets.all(16),
@@ -74,6 +82,15 @@ class _ProfileState extends State<Profile> {
               keyboardType: TextInputType.number,
               onChanged: (value) {
                 _phone = value;
+              },
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                setState(() {
+                  _phone = "";
+                  _controllerPhone.text = "";
+                });
               },
             ),
             contentPadding: EdgeInsets.all(16),
@@ -99,6 +116,14 @@ class _ProfileState extends State<Profile> {
                 );
               }).toList(),
             ),
+            trailing: IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                setState(() {
+                  _sex = sexMap[Sex.none];
+                });
+              },
+            ),
             contentPadding: EdgeInsets.all(16),
           ),
           ListTile(
@@ -107,34 +132,45 @@ class _ProfileState extends State<Profile> {
                 " (" +
                 AppLocalizations.of(context).translate("optional") +
                 ")"),
-            subtitle: RaisedButton(
-              onPressed: () async {
-                _birthday = await showDatePicker(
-                  context: context,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                  initialDate: _birthday == null
-                      ? DateTime.now().subtract(Duration(days: 1))
-                      : _birthday,
-                  initialDatePickerMode: DatePickerMode.year,
-                );
-                setState(() {});
+            subtitle: Text(_birthday == null
+                ? AppLocalizations.of(context).translate("sex-none")
+                : _birthday.day.toString() +
+                    "/" +
+                    _birthday.month.toString() +
+                    "/" +
+                    _birthday.year.toString()),
+            onTap: () async {
+              _birthday = await showDatePicker(
+                context: context,
+                firstDate: DateTime(1900),
+                lastDate: DateTime.now(),
+                initialDate: _birthday == null
+                    ? DateTime.now().subtract(Duration(days: 1))
+                    : _birthday,
+                initialDatePickerMode: DatePickerMode.year,
+              );
+              setState(() {});
+            },
+            trailing: IconButton(
+              icon: Icon(Icons.clear),
+              onPressed: () {
+                setState(() {
+                  _birthday = null;
+                });
               },
-              child: Text(_birthday == null
-                  ? AppLocalizations.of(context).translate("sex-none")
-                  : _birthday.day.toString() +
-                      "/" +
-                      _birthday.month.toString() +
-                      "/" +
-                      _birthday.year.toString()),
             ),
+            contentPadding: EdgeInsets.all(16),
           ),
-          ListTile(),
           ListTile(
             title: RaisedButton(
               onPressed: () {
                 if (_name == "")
-                  showNameErrorDialog(context);
+                  showErrorDialog(
+                      context,
+                      AppLocalizations.of(context)
+                          .translate("name-error-title"),
+                      AppLocalizations.of(context)
+                          .translate("name-error-text"));
                 else {
                   myself.setData(
                       name: _name,

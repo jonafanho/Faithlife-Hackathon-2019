@@ -188,7 +188,8 @@ class Person {
       _birthYear = birthday.year;
       _birthMonth = birthday.month;
       _birthDay = birthday.day;
-    }
+    } else
+      _birthYear = _birthMonth = _birthDay = -1;
     if (phone != null) _phone = phone;
     if (sex != null) _sex = sex;
     _writeToDatabase();
@@ -239,7 +240,12 @@ class Person {
     body += _sex.index.toString();
     body += '","phone":"';
     body += _phone.toString();
-    body += '"}';
+    body += '","groups":{';
+    _groups.forEach((key, value) {
+      body += '"' + key + '":"true",';
+    });
+    body = body.substring(0, body.length - 1);
+    body += '}}';
     _putData("person_" + _nameId.toString(), body);
   }
 }
