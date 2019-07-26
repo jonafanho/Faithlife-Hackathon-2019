@@ -119,14 +119,9 @@ void getRequestsToMe() async {
         print("Age upper doesn't fit you");
       }
 
-      if (requestMap.containsKey("sex") &&
-          requestMap["sex"] != 0 &&
-          requestMap["sex"].toString() != myself._sex.index.toString()) {
+      if (myself._sex.index == 0 && requestMap["sex"] != 0 || myself._sex.index != 0 && requestMap["sex"] != 0 && myself._sex.index != requestMap["sex"]) {
         fitsMe = false;
-        print("Sex doesn't fit you, Request sex is " +
-            requestMap["sex"].toString() +
-            "|| My sex is " +
-            myself._sex.index.toString());
+        print("Sex doesn't fit you");
       }
 
       //Get the sender's name
