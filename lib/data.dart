@@ -93,7 +93,7 @@ void getRequestsToMe() async {
 
   //Getting all requests that match me
   for (String request in requestsOfMyGroups) {
-    String route = request;
+    String route = 'request_'+request;
     String response = await _getData(route);
     print("Reponse: " + response);
     if (response != "null") {
@@ -124,15 +124,17 @@ void getRequestsToMe() async {
         print("Sex doesn't fit you");
       }
 
-      if (fitsMe && requestMap.containsKey("sender")) {
+      //Get the sender's name
+      if (fitsMe && requestMap.containsKey("sender") && requestMap.containsKey("type")) {
         String personRoute = 'person_' + requestMap["sender"].toString();
         String personResponse = await _getData(personRoute);
         var personMap = json.decode(personResponse);
         if (personResponse != "null" && personMap.containsKey("name")) {
           String name = personMap["name"];
           String message = requestMap["message"];
+          String type = requestMap["type"];
 
-          Request newRequestForMe = new Request(name, message);
+          Request newRequestForMe = new Request(name, message, type);
           requestsForMe.add(newRequestForMe);
         }
       }
@@ -142,8 +144,10 @@ void getRequestsToMe() async {
   for (Request r in requestsForMe) {
     print("FOUND REQUEST(S) FOR ME {name: " +
         r.getName() +
-        " message: " +
+        " || message: " +
         r.getMessage() +
+        " || type: " +
+        r.getType()+
         '}');
   }
 }
@@ -235,10 +239,12 @@ void createMeetRequest(String meetingType, String message, int distance,
 class Request {
   String _name = "";
   String _message = "";
+  String _type = "";
 
-  Request(String name, String message) {
+  Request(String name, String message, String type) {
     this._name = name;
     this._message = message;
+    this._type = type;
   }
 
   String getName() {
@@ -247,6 +253,10 @@ class Request {
 
   String getMessage() {
     return _message;
+  }
+
+  String getType() {
+    return _type;
   }
 }
 

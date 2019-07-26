@@ -314,7 +314,12 @@ class _ViewRequestState extends State<ViewRequest> {
             return ListTile(
               title: Text(
                 requestsForMe[i].getName(),
-                style: TextStyle(color: themeColour, fontSize: 14),
+                style: TextStyle(color: themeColour, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              subtitle: Text(
+                requestsForMe[i].getMessage(),
+                style: TextStyle(color: Colors.black, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
             );
