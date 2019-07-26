@@ -161,7 +161,6 @@ Future getRequestsToMe() async {
       "----------------------------------------------------------------------------------------");
   //print("10 seconds passed, pinging...");
   requestsOfMyGroups.clear();
-  requestsForMe.clear();
 
   //Getting all of my groups
   List<String> myGroups = new List<String>();
@@ -184,6 +183,8 @@ Future getRequestsToMe() async {
       //print('Requests from my Groups: ' + requestsOfMyGroups.toString());
     }
   }
+
+  requestsForMe.clear();
 
   //Getting all requests that match me
   for (String request in requestsOfMyGroups) {
@@ -231,8 +232,9 @@ Future getRequestsToMe() async {
           String name = personMap["name"];
           String message = requestMap["message"];
           String type = requestMap["type"];
+          String id = request;
 
-          Request newRequestForMe = new Request(name, message, type);
+          Request newRequestForMe = new Request(name, message, type, id);
           requestsForMe.add(newRequestForMe);
         }
       }
@@ -324,11 +326,13 @@ class Request {
   String _name = "";
   String _message = "";
   String _type = "";
+  String _id = "";
 
-  Request(String name, String message, String type) {
+  Request(String name, String message, String type, String id) {
     this._name = name;
     this._message = message;
     this._type = type;
+    this._id = id;
   }
 
   String getName() {
@@ -341,6 +345,10 @@ class Request {
 
   String getType() {
     return _type;
+  }
+
+  String getId() {
+    return _id;
   }
 }
 
