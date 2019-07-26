@@ -12,7 +12,7 @@ class RequestMeet extends StatefulWidget {
 }
 
 class _RequestMeetState extends State<RequestMeet> {
-  String _meetingTypeValue;
+  String _request;
   String _message = "";
   bool _proximityChecked = false;
   int _distance = -1;
@@ -24,6 +24,12 @@ class _RequestMeetState extends State<RequestMeet> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> _requestList = [
+      AppLocalizations.of(context).translate("request-prayer"),
+      AppLocalizations.of(context).translate("request-bible"),
+      AppLocalizations.of(context).translate("request-service"),
+      AppLocalizations.of(context).translate("request-chat")
+    ];
     if (_sexValue == null) _sexValue = sexStringList.first;
     if (_selectedGroup == null)
       _selectedGroup = myself.getGroups().values.first;
@@ -34,37 +40,22 @@ class _RequestMeetState extends State<RequestMeet> {
       body: ListView(
         children: <Widget>[
           ListTile(
-            title: Row(
-              children: [
-                Text(AppLocalizations.of(context).translate("type")),
-                SizedBox(width: 16),
-                DropdownButton<String>(
-                  hint: Text(
-                    "Meeting Type",
-                    textAlign: TextAlign.center,
-                  ),
-                  value: _meetingTypeValue,
-                  onChanged: (String newValue) {
-                    setState(() {
-                      _meetingTypeValue = newValue;
-                    });
-                  },
-                  items: <String>['Prayer', 'Bible', 'Service', 'Chat']
-                      .map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(
-                        value,
-                        style: TextStyle(
-                          color: value == _meetingTypeValue
-                              ? themeColour
-                              : Colors.black,
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
+            title: DropdownButton<String>(
+              hint:
+                  Text(AppLocalizations.of(context).translate("request-type")),
+              value: _request,
+              onChanged: (String newValue) {
+                setState(() {
+                  _request = newValue;
+                });
+              },
+              isExpanded: true,
+              items: _requestList.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
             ),
           ),
           ListTile(
@@ -209,8 +200,8 @@ class _RequestMeetState extends State<RequestMeet> {
             ]),
           ),
           ListTile(
-            title: Text(AppLocalizations.of(context).translate("sex")),
-            subtitle: DropdownButton<String>(
+            leading: Text(AppLocalizations.of(context).translate("sex")),
+            title: DropdownButton<String>(
               value: _sexValue,
               onChanged: (newValue) {
                 setState(() {
@@ -245,9 +236,6 @@ class _RequestMeetState extends State<RequestMeet> {
               Flexible(
                 child: DropdownButton<String>(
                   value: _selectedGroup,
-                  style: TextStyle(
-                    color: _groupChecked ? themeColour : Colors.grey,
-                  ),
                   onChanged: (String newValue) {
                     setState(() {
                       _selectedGroup = newValue;
@@ -260,7 +248,12 @@ class _RequestMeetState extends State<RequestMeet> {
                       .map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(
+                        value,
+                        style: TextStyle(
+                          color: _groupChecked ? themeColour : Colors.grey,
+                        ),
+                      ),
                     );
                   }).toList(),
                 ),
@@ -283,8 +276,8 @@ class _RequestMeetState extends State<RequestMeet> {
                   _groupList.add(_selectedGroup);
                 } else
                   _groupList.addAll(myself.getGroups().values);
-                createMeetRequest(_meetingTypeValue, _message, _distance,
-                    _ageStart, _ageEnd, _sexValue, _groupList);
+                createMeetRequest(_request, _message, _distance, _ageStart,
+                    _ageEnd, _sexValue, _groupList);
                 Navigator.pop(context);
               },
             ),

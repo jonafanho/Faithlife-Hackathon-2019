@@ -34,6 +34,7 @@ Future _putData(String route, String body) async {
 
 Future createGroup(String name) async {
   String groups = await _getData("groups");
+  if (groups == "null") groups = "{";
   String roomCode;
   Random r = new Random();
   do {
