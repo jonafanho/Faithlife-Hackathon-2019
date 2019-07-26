@@ -95,7 +95,7 @@ void getRequestsToMe() async {
 
   //Getting all requests that match me
   for (String request in requestsOfMyGroups) {
-    String route = 'request_'+request;
+    String route = 'request_' + request;
     String response = await _getData(route);
     //print("Reponse: " + response);
     if (response != "null") {
@@ -123,11 +123,17 @@ void getRequestsToMe() async {
           requestMap["sex"] != 0 &&
           requestMap["sex"].toString() != myself._sex.index.toString()) {
         fitsMe = false;
-        print("Sex doesn't fit you");
+        print("Sex doesn't fit you, Request sex is " +
+            requestMap["sex"].toString() +
+            "|| My sex is " +
+            myself._sex.index.toString());
       }
 
       //Get the sender's name
-      if (fitsMe && requestMap.containsKey("sender") && int.parse(requestMap["sender"]) != savedNameId && requestMap.containsKey("type")) {
+      if (fitsMe &&
+          requestMap.containsKey("sender") &&
+          int.parse(requestMap["sender"]) != savedNameId &&
+          requestMap.containsKey("type")) {
         String personRoute = 'person_' + requestMap["sender"].toString();
         String personResponse = await _getData(personRoute);
         var personMap = json.decode(personResponse);
@@ -149,7 +155,7 @@ void getRequestsToMe() async {
         " || message: " +
         r.getMessage() +
         " || type: " +
-        r.getType()+
+        r.getType() +
         '}');
   }
 }
@@ -191,7 +197,7 @@ String listToJson(List<String> s) {
 }
 
 void createMeetRequest(String meetingType, String message, int distance,
-    int ageLower, int ageUpper, String sex, List<String> selectedGroups) async {
+    int ageLower, int ageUpper, int sex, List<String> selectedGroups) async {
   String requestId = DateTime.now().millisecondsSinceEpoch.toString();
   requestId = requestId.substring(4, requestId.length);
   String body = '{';
@@ -217,7 +223,7 @@ void createMeetRequest(String meetingType, String message, int distance,
   }
   if (sex != null) {
     body += '"sex":"';
-    body += sex;
+    body += sex.toString();
     body += '",';
   }
   body += '"groups":' + listToJson(selectedGroups) + ",";
@@ -366,7 +372,7 @@ class Person {
     body += '","phone":"';
     body += _phone.toString();
     body += '","groups":';
-    body += listToJson(_groups.keys);
+    body += listToJson(_groups.keys.toList());
     body += "}";
     _putData("person_" + _nameId.toString(), body);
   }

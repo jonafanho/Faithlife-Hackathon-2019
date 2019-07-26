@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
+          if (supportedLocale.languageCode == "en") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
@@ -95,8 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
     sexMap = {
       Sex.none: AppLocalizations.of(context).translate("sex-none"),
+      Sex.male: AppLocalizations.of(context).translate("sex-male"),
       Sex.female: AppLocalizations.of(context).translate("sex-female"),
-      Sex.male: AppLocalizations.of(context).translate("sex-male")
     };
     sexStringList = new List<String>();
     sexMap.forEach((sex, string) {
@@ -116,7 +116,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => ViewRequest()));
                   },
-                  tooltip: AppLocalizations.of(context).translate("view-requests"),
+                  tooltip:
+                      AppLocalizations.of(context).translate("view-requests"),
                 )
               ],
             ),
