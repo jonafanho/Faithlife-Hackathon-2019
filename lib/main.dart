@@ -24,6 +24,7 @@ enum Sex { none, male, female }
 
 Timer timer;
 List<String> requestsOfMyGroups = new List<String>();
+List<Request> requestsForMe = new List<Request>();
 
 Future main() async {
   savedNameId = await init();
@@ -40,7 +41,7 @@ Future main() async {
         currentLocation.time.toString());*/
   });
   runApp(MyApp());
-  timer = Timer.periodic(Duration(seconds: 5), (Timer t) => getRequests());
+  timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getRequestsToMe());
 }
 
 class MyApp extends StatelessWidget {
