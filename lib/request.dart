@@ -345,7 +345,7 @@ class _ViewRequestState extends State<ViewRequest> {
 
           DateTime _requestTime =
               DateTime.fromMillisecondsSinceEpoch(requestsForMe[i].getId());
-          _requestTime = _requestTime.add(Duration(hours: -7)); // TODO
+          //_requestTime = _requestTime.add(Duration(hours: -7)); // TODO
           String _hour =
               ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
                   .toString();

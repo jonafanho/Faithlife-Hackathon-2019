@@ -317,7 +317,7 @@ void showMsgDialog(BuildContext context, String title, String text, Request req)
         content: Text(text),
         actions: <Widget>[
           FlatButton(
-            child: Text("Remove this request"),
+            child: Text(AppLocalizations.of(context).translate("remove-request")),
             onPressed: () {
               seenRequestId.add(req.getId());
               haventSeenRequestsForMe.remove(req);
@@ -325,7 +325,7 @@ void showMsgDialog(BuildContext context, String title, String text, Request req)
             },
           ),
           FlatButton(
-            child: new Text("Close"),
+            child: new Text(AppLocalizations.of(context).translate("close")),
             onPressed: () {
               Navigator.pop(context);
             },
