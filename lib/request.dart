@@ -14,11 +14,11 @@ class RequestMeet extends StatefulWidget {
 class _RequestMeetState extends State<RequestMeet> {
   String _request;
   String _message = "";
-  bool _proximityChecked = false;
+  bool _distanceChecked = false;
   int _distance = -1;
   String _sexValue;
-  bool _ageStartChecked = false, _ageEndChecked = false;
-  int _ageStart, _ageEnd;
+  bool _ageLowerChecked = false, _ageUpperChecked = false;
+  int _ageLower, _ageUpper;
   bool _groupChecked = false;
   String _selectedGroup;
 
@@ -75,10 +75,10 @@ class _RequestMeetState extends State<RequestMeet> {
             title: Text(AppLocalizations.of(context).translate("filters")),
           ),
           CheckboxListTile(
-            value: _proximityChecked,
+            value: _distanceChecked,
             onChanged: (bool value) {
               setState(() {
-                _proximityChecked = value;
+                _distanceChecked = value;
               });
             },
             controlAffinity: ListTileControlAffinity.leading,
@@ -87,7 +87,7 @@ class _RequestMeetState extends State<RequestMeet> {
                 Text(
                   "within  ",
                   style: TextStyle(
-                    color: _proximityChecked ? Colors.black : Colors.grey,
+                    color: _distanceChecked ? Colors.black : Colors.grey,
                   ),
                 ),
                 Flexible(
@@ -95,7 +95,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     width: 50.0,
                     child: TextField(
                       style: TextStyle(
-                        color: _proximityChecked ? themeColour : Colors.grey,
+                        color: _distanceChecked ? themeColour : Colors.grey,
                       ),
                       inputFormatters: <TextInputFormatter>[
                         WhitelistingTextInputFormatter.digitsOnly,
@@ -111,17 +111,17 @@ class _RequestMeetState extends State<RequestMeet> {
                 Text(
                   " km",
                   style: TextStyle(
-                    color: _proximityChecked ? Colors.black : Colors.grey,
+                    color: _distanceChecked ? Colors.black : Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
           CheckboxListTile(
-            value: _ageStartChecked,
+            value: _ageLowerChecked,
             onChanged: (bool value) {
               setState(() {
-                _ageStartChecked = value;
+                _ageLowerChecked = value;
               });
             },
             controlAffinity: ListTileControlAffinity.leading,
@@ -129,7 +129,7 @@ class _RequestMeetState extends State<RequestMeet> {
               Text(
                 AppLocalizations.of(context).translate("at-least") + " ",
                 style: TextStyle(
-                  color: _ageStartChecked ? Colors.black : Colors.grey,
+                  color: _ageLowerChecked ? Colors.black : Colors.grey,
                 ),
               ),
               Flexible(
@@ -137,7 +137,7 @@ class _RequestMeetState extends State<RequestMeet> {
                   width: 50.0,
                   child: TextField(
                     style: TextStyle(
-                      color: _ageStartChecked ? themeColour : Colors.grey,
+                      color: _ageLowerChecked ? themeColour : Colors.grey,
                     ),
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
@@ -145,7 +145,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
-                      _ageStart = int.parse(text);
+                      _ageLower = int.parse(text);
                     },
                   ),
                 ),
@@ -153,16 +153,16 @@ class _RequestMeetState extends State<RequestMeet> {
               Text(
                 " " + AppLocalizations.of(context).translate("years-old"),
                 style: TextStyle(
-                  color: _ageStartChecked ? Colors.black : Colors.grey,
+                  color: _ageLowerChecked ? Colors.black : Colors.grey,
                 ),
               ),
             ]),
           ),
           CheckboxListTile(
-            value: _ageEndChecked,
+            value: _ageUpperChecked,
             onChanged: (bool value) {
               setState(() {
-                _ageEndChecked = value;
+                _ageUpperChecked = value;
               });
             },
             controlAffinity: ListTileControlAffinity.leading,
@@ -170,7 +170,7 @@ class _RequestMeetState extends State<RequestMeet> {
               Text(
                 AppLocalizations.of(context).translate("at-most") + " ",
                 style: TextStyle(
-                  color: _ageEndChecked ? Colors.black : Colors.grey,
+                  color: _ageUpperChecked ? Colors.black : Colors.grey,
                 ),
               ),
               Flexible(
@@ -178,7 +178,7 @@ class _RequestMeetState extends State<RequestMeet> {
                   width: 50.0,
                   child: TextField(
                     style: TextStyle(
-                      color: _ageEndChecked ? themeColour : Colors.grey,
+                      color: _ageUpperChecked ? themeColour : Colors.grey,
                     ),
                     inputFormatters: <TextInputFormatter>[
                       WhitelistingTextInputFormatter.digitsOnly,
@@ -186,7 +186,7 @@ class _RequestMeetState extends State<RequestMeet> {
                     ],
                     keyboardType: TextInputType.number,
                     onChanged: (text) {
-                      _ageEnd = int.parse(text);
+                      _ageUpper = int.parse(text);
                     },
                   ),
                 ),
@@ -194,7 +194,7 @@ class _RequestMeetState extends State<RequestMeet> {
               Text(
                 " " + AppLocalizations.of(context).translate("years-old"),
                 style: TextStyle(
-                  color: _ageEndChecked ? Colors.black : Colors.grey,
+                  color: _ageUpperChecked ? Colors.black : Colors.grey,
                 ),
               ),
             ]),
@@ -269,17 +269,25 @@ class _RequestMeetState extends State<RequestMeet> {
                       : AppLocalizations.of(context).translate("all-groups"))),
               textColor: Colors.white,
               color: themeColour,
-              onPressed: () {
-                List<String> _groupList = new List<String>();
-                if (_groupChecked) {
-                  _groupList.clear();
-                  _groupList.add(_selectedGroup);
-                } else
-                  _groupList.addAll(myself.getGroups().values);
-                createMeetRequest(_request, _message, _distance, _ageStart,
-                    _ageEnd, _sexValue, _groupList);
-                Navigator.pop(context);
-              },
+              onPressed: _message == "" || _request == null
+                  ? null
+                  : () {
+                      List<String> _groupList = new List<String>();
+                      if (_groupChecked)
+                        _groupList.add(
+                            getKeyFromMap(myself.getGroups(), _selectedGroup));
+                      else
+                        _groupList.addAll(myself.getGroups().keys);
+                      createMeetRequest(
+                          _request,
+                          _message,
+                          _distanceChecked ? _distance : 0,
+                          _ageLowerChecked ? _ageLower : null,
+                          _ageUpperChecked ? _ageUpper : null,
+                          _sexValue == sexStringList.first ? null : _sexValue,
+                          _groupList);
+                      Navigator.pop(context);
+                    },
             ),
           ),
         ],

@@ -259,8 +259,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-T getKeyFromMap<T>(Map<T, String> map, String sex) {
-  for (T s in map.keys) if (map[s] == sex) return s;
+T getKeyFromMap<T>(Map<T, String> map, String string) {
+  for (T s in map.keys) if (map[s] == string) return s;
   return null;
 }
 

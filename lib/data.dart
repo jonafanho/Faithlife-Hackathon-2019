@@ -63,7 +63,8 @@ Future joinGroup(String roomCode) async {
 }*/
 
 void getRequestsToMe() async {
-  print("----------------------------------------------------------------------------------------");
+  print(
+      "----------------------------------------------------------------------------------------");
   print("10 seconds passed, pinging...");
   requestsOfMyGroups.clear();
   requestsForMe.clear();
@@ -74,7 +75,7 @@ void getRequestsToMe() async {
     myGroups.add(key);
   });
 
-  print("myGroups: "+myGroups.toString());
+  print("myGroups: " + myGroups.toString());
 
   //Getting all requests in my groups
   for (String group in myGroups) {
@@ -91,10 +92,10 @@ void getRequestsToMe() async {
   }
 
   //Getting all requests that match me
-  for(String request in requestsOfMyGroups){
-    String route = 'request_'+request;
+  for (String request in requestsOfMyGroups) {
+    String route = request;
     String response = await _getData(route);
-    print("Reponse : "+response);
+    print("Reponse: " + response);
     if (response != "null") {
       var requestMap = json.decode(response);
       bool fitsMe = true;
@@ -104,42 +105,47 @@ void getRequestsToMe() async {
       int birthDay = myself._birthDay;
       int myAge = calculateAge(birthYear, birthMonth, birthDay);
 
-
-      if(requestMap.containsKey("age_lower") && requestMap["age_lower"] > myAge) {
+      if (requestMap.containsKey("age_lower") &&
+          requestMap["age_lower"] > myAge) {
         fitsMe = false;
         print("Age lower doesn't fit you");
       }
 
-      if(requestMap.containsKey("age_upper") && requestMap["age_upper"] < myAge) {
+      if (requestMap.containsKey("age_upper") &&
+          requestMap["age_upper"] < myAge) {
         fitsMe = false;
         print("Age upper doesn't fit you");
       }
 
-      if(requestMap.containsKey("sex") && requestMap["sex"] != 0 && requestMap["sex"].toString() != myself._sex.index.toString()) {
+      if (requestMap.containsKey("sex") &&
+          requestMap["sex"] != 0 &&
+          requestMap["sex"].toString() != myself._sex.index.toString()) {
         fitsMe = false;
         print("Sex doesn't fit you");
       }
 
-      if(fitsMe && requestMap.containsKey("sender"))
-        {
-          String personRoute = 'person_'+requestMap["sender"].toString();
-          String personResponse = await _getData(personRoute);
-          var personMap = json.decode(personResponse);
-          if (personResponse != "null" && personMap.containsKey("name")) {
-            String name = personMap["name"];
-            String message = requestMap["message"];
+      if (fitsMe && requestMap.containsKey("sender")) {
+        String personRoute = 'person_' + requestMap["sender"].toString();
+        String personResponse = await _getData(personRoute);
+        var personMap = json.decode(personResponse);
+        if (personResponse != "null" && personMap.containsKey("name")) {
+          String name = personMap["name"];
+          String message = requestMap["message"];
 
-            Request newRequestForMe = new Request(name, message);
-            requestsForMe.add(newRequestForMe);
-          }
+          Request newRequestForMe = new Request(name, message);
+          requestsForMe.add(newRequestForMe);
         }
+      }
     }
   }
 
-  for(Request r in requestsForMe)
-    {
-      print("FOUND REQUEST(S) FOR ME {name: "+r.getName()+" message: "+r.getMessage()+'}');
-    }
+  for (Request r in requestsForMe) {
+    print("FOUND REQUEST(S) FOR ME {name: " +
+        r.getName() +
+        " message: " +
+        r.getMessage() +
+        '}');
+  }
 }
 
 int calculateAge(int year, int month, int day) {
@@ -169,40 +175,61 @@ String _addToExistingJson(String existing, String add) {
   return existing.replaceAll("}", ",") + '"' + add + '":"true"}';
 }
 
-void createMeetRequest(String meetingType, String message, int distance,
-    int ageStart, int ageEnd, String sex, List<String> selectedGroups) {
-  String actualSelectedGroups = selectedGroups.toString().replaceAll('[', '{"');
-  actualSelectedGroups = actualSelectedGroups.replaceAll(', ', '": "true", "');
-  actualSelectedGroups = actualSelectedGroups.replaceAll(']', '": "true"}');
+String listToJson(List<String> s) {
+  String body = "";
+  s.forEach((value) {
+    body += '"' + value + '":"true",';
+  });
+  body = body.substring(0, body.length - 1);
+  return "{" + body + "}";
+}
 
-  String route = "RequestTest4";
-  String body = '{"age_lower": "' +
-      ageStart.toString() +
-      '", ' +
-      '"age_upper": "' +
-      ageEnd.toString() +
-      '", ' +
-      '"answered": "false", ' +
-      '"distance": "' +
-      distance.toString() +
-      '", ' +
-      '"message": "' +
-      message +
-      '", ' +
-      '"sender": "' +
-      savedNameId.toString() +
-      '", ' +
-      '"sex": "' +
-      sex +
-      '", ' +
-      '"type": "' +
-      meetingType +
-      '", ' +
-      '"groups": ' +
-      actualSelectedGroups +
-      '}';
+void createMeetRequest(String meetingType, String message, int distance,
+    int ageLower, int ageUpper, String sex, List<String> selectedGroups) async {
+  String requestId = DateTime.now().millisecondsSinceEpoch.toString();
+  requestId = requestId.substring(4, requestId.length);
+  print("hiasdfhlawefj");
+  print(meetingType);
+  print(message);
+  print(distance);
+  print(ageLower);
+  print(ageUpper);
+  print(sex);
+  print(selectedGroups);
+  print("lwkefj");
+  String body = '{';
+  if (meetingType != null) {
+    body += '"type":"';
+    body += meetingType;
+    body += '",';
+  }
+  if (distance > 0) {
+    body += '"distance":"';
+    body += distance.toString();
+    body += '",';
+  }
+  if (ageLower != null) {
+    body += '"age-lower":"';
+    body += ageLower.toString();
+    body += '",';
+  }
+  if (ageUpper != null) {
+    body += '"age-upper":"';
+    body += ageUpper.toString();
+    body += '",';
+  }
+  if (sex != null) {
+    body += '"sex":"';
+    body += sex;
+    body += '",';
+  }
+  body += '"groups":' + listToJson(selectedGroups) + ",";
+  body += '"sender":"' + savedNameId.toString() + '",';
+  body += '"message":"' + message + '"}';
   print(body);
-  _putData(route, body);
+  await _putData("request_" + requestId, body);
+  for (String group in selectedGroups)
+    await _addToList("group_" + group + "/requests", requestId);
 }
 
 class Request {
@@ -336,12 +363,9 @@ class Person {
     body += _sex.index.toString();
     body += '","phone":"';
     body += _phone.toString();
-    body += '","groups":{';
-    _groups.forEach((key, value) {
-      body += '"' + key + '":"true",';
-    });
-    body = body.substring(0, body.length - 1);
-    body += '}}';
+    body += '","groups":';
+    body += listToJson(_groups.keys);
+    body += "}";
     _putData("person_" + _nameId.toString(), body);
   }
 }
