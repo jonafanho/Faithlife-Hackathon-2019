@@ -325,9 +325,7 @@ class _ViewRequestState extends State<ViewRequest> {
           IconButton(
             icon: Icon(Icons.refresh),
             onPressed: () {
-              setState(() async {
-                await getRequestsToMe();
-              });
+              setState(() {});
             },
           )
         ],
