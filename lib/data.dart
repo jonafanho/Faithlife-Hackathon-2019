@@ -233,7 +233,7 @@ Future getRequestsToMe() async {
         String name = personMap["name"].toString();
         String message = requestMap["message"].toString();
         String type = requestMap["type"].toString();
-        String id = request;
+        int id = int.parse(request);
 
         Request newRequestForMe = new Request(name, message, type, id);
         _requestsForMe.add(newRequestForMe);
@@ -327,9 +327,9 @@ class Request {
   String _name = "";
   String _message = "";
   String _type = "";
-  String _id = "";
+  int _id = 0;
 
-  Request(String name, String message, String type, String id) {
+  Request(String name, String message, String type, int id) {
     this._name = name;
     this._message = message;
     this._type = type;
@@ -348,7 +348,7 @@ class Request {
     return _type;
   }
 
-  String getId() {
+  int getId() {
     return _id;
   }
 }

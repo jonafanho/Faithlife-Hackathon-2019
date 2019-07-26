@@ -309,9 +309,9 @@ class _ViewRequestState extends State<ViewRequest> {
       case 1:
         return Icons.book;
       case 2:
-        return Icons.chat;
-      default:
         return Icons.help;
+      default:
+        return Icons.message;
     }
   }
 
@@ -324,22 +324,51 @@ class _ViewRequestState extends State<ViewRequest> {
       body: ListView.builder(
         itemCount: (requestsForMe.length),
         itemBuilder: (BuildContext context, int i) {
+          int j = requestsForMe.length - i - 1;
+          String _requestMessage = requestsForMe[j].getMessage();
+          String _requestType = requestsForMe[j].getType();
+          String _requestName = requestsForMe[j].getName();
+          DateTime _requestTime =
+              DateTime.fromMillisecondsSinceEpoch(requestsForMe[j].getId());
+          String _hour =
+              ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
+                  .toString();
           return ListTile(
             title: Text(
-              requestsForMe[i].getName(),
+              _requestName,
               //style: TextStyle(color: themeColour, fontSize: 16),
               //textAlign: TextAlign.center,
             ),
             subtitle: Text(
-              requestsForMe[i].getMessage(),
+              _requestMessage,
               //style: TextStyle(color: Colors.black, fontSize: 14),
               //textAlign: TextAlign.center,
             ),
-            leading: Icon(getIconByRequestType(requestsForMe[i].getType())
+            leading: Icon(getIconByRequestType(_requestType)
                 //color: themeColour,
                 //size: 30.0,
                 ),
-            onTap: () {},
+            trailing: Text(
+              _hour +
+                  ":" +
+                  _requestTime.minute.toString() +
+                  (_requestTime.hour >= 12 ? "pm" : "am") +
+                  "\n" +
+                  _requestTime.day.toString() +
+                  "/" +
+                  _requestTime.month.toString() +
+                  "/" +
+                  _requestTime.year.toString(),
+              textAlign: TextAlign.right,
+            ),
+            onTap: () {
+              showErrorDialog(
+                  context,
+                  _requestName +
+                      ": " +
+                      _requestType.substring(1, _requestType.length),
+                  _requestMessage);
+            },
           );
         },
       ),
