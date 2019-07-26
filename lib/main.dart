@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_localizations/flutter_localizations.dart";
 import "package:google_maps_flutter/google_maps_flutter.dart";
-import "package:url_launcher/url_launcher.dart" as launcher;
 import "package:location/location.dart";
 
 import "localizations.dart";
@@ -23,7 +22,6 @@ Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
 
-Timer timer;
 List<String> requestsOfMyGroups = new List<String>();
 List<Request> requestsForMe = new List<Request>();
 
@@ -46,7 +44,6 @@ Future main() async {
         currentLocation.time.toString());*/
   });
   runApp(MyApp());
-  timer = Timer.periodic(Duration(seconds: 10), (Timer t) => getRequestsToMe());
 }
 
 class MyApp extends StatelessWidget {
@@ -81,6 +78,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   GoogleMapController _controller;
+  Timer timer;
+
+  _MyHomePageState() {
+    getLocations(this.context);
+    timer = Timer.periodic(Duration(seconds: 10), (Timer t) => timerUpdate());
+  }
+
+  void timerUpdate() async {
+    await getRequestsToMe();
+    await getLocations(this.context);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {

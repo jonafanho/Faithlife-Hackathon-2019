@@ -1,9 +1,15 @@
-import "dart:convert";
+import "package:flutter/material.dart";
 import "package:http/http.dart" as http;
 import "package:shared_preferences/shared_preferences.dart";
+import "package:google_maps_flutter/google_maps_flutter.dart";
+import "package:url_launcher/url_launcher.dart" as launcher;
 import "dart:math";
+import "dart:convert";
+import "package:flutter/painting.dart";
 
 import "main.dart";
+import "localizations.dart";
+import "profile.dart";
 
 Future<int> init() async {
   final _prefs = await SharedPreferences.getInstance();
@@ -30,6 +36,92 @@ Future _putData(String route, String body) async {
       .put("https://faithlifehackathon2019.firebaseio.com" + route + ".json",
           body: body)
       .timeout(Duration(seconds: 10));
+}
+
+Future getLocations(BuildContext context) async {
+  List<String> people = new List<String>();
+  for (String group in myself._groups.keys) {
+    var everyone = json.decode(await _getData("group_" + group + "/people"));
+    for (var person in everyone.keys)
+      if (!people.contains(person) && person != savedNameId.toString())
+        people.add(person.toString());
+  }
+  markers.clear();
+  for (String person in people) {
+    var data = json.decode(await _getData("person_" + person));
+    markers[MarkerId(person)] = Marker(
+      markerId: MarkerId(person),
+      position: LatLng(
+          double.parse(data["latitude"]), double.parse(data["longitude"])),
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+          HSVColor.fromColor(themeColour).hue),
+      infoWindow: await _getPersonDetails(context, person),
+    );
+  }
+  markers[MarkerId("myself")] = Marker(
+    markerId: MarkerId("myself"),
+    position: LatLng(myself._latitude, myself._longitude),
+    infoWindow: InfoWindow(
+        title: myself._name +
+            " (" +
+            AppLocalizations.of(context).translate("me") +
+            ")",
+        snippet: moodMap[myself._mood],
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Profile()));
+        }),
+  );
+}
+
+Future<InfoWindow> _getPersonDetails(BuildContext context, String id) async {
+  Person p = new Person();
+  await p._getPersonFromDatabase(int.parse(id));
+  return InfoWindow(
+    title: p._name,
+    snippet: moodMap[p._mood],
+    onTap: () {
+      String phone = p._phone > 0
+          ? p._phone.toString()
+          : "(" + AppLocalizations.of(context).translate("no-phone") + ")";
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(p._name + " " + moodMap[p._mood].substring(0, 2)),
+          content: ListTile(
+            leading: IconButton(
+              icon: Icon(Icons.phone),
+              onPressed: p._phone > 0
+                  ? () {
+                      launcher.launch("tel:" + phone);
+                    }
+                  : null,
+            ),
+            title: Text(p._groups.values.toString()),
+            subtitle: Text(phone),
+            trailing: IconButton(
+              icon: Icon(Icons.sms),
+              onPressed: p._phone > 0
+                  ? () {
+                      launcher.launch("sms:" + phone);
+                    }
+                  : null,
+            ),
+            contentPadding: EdgeInsets.zero,
+            isThreeLine: true,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(AppLocalizations.of(context).translate("ok")),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        ),
+      );
+    },
+  );
 }
 
 Future<String> createGroup(String name) async {
@@ -64,7 +156,7 @@ Future<String> joinGroup(String roomCode) async {
   _putData("group_" + roomCode + "/people/" + savedNameId.toString(), '{}');
 }*/
 
-void getRequestsToMe() async {
+Future getRequestsToMe() async {
   print(
       "----------------------------------------------------------------------------------------");
   //print("10 seconds passed, pinging...");
@@ -119,7 +211,10 @@ void getRequestsToMe() async {
         print("Age upper doesn't fit you");
       }
 
-      if (myself._sex.index == 0 && requestMap["sex"] != 0 || myself._sex.index != 0 && requestMap["sex"] != 0 && myself._sex.index != requestMap["sex"]) {
+      if (myself._sex.index == 0 && requestMap["sex"] != 0 ||
+          myself._sex.index != 0 &&
+              requestMap["sex"] != 0 &&
+              myself._sex.index != requestMap["sex"]) {
         fitsMe = false;
         print("Sex doesn't fit you");
       }
