@@ -59,7 +59,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "en") //locale?.languageCode)
+          if (supportedLocale.languageCode == "zh") //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
@@ -108,17 +108,17 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         : Scaffold(
             appBar: AppBar(
-                title: Text(AppLocalizations.of(context).translate("home")),
-                actions: <Widget>[
-                  IconButton(
-                    icon: Icon(Icons.open_in_new),
-                    onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ViewRequest()));
-                    },
-                    tooltip: "View Requests",
-                  )
-                ],
+              title: Text(AppLocalizations.of(context).translate("home")),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.open_in_new),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ViewRequest()));
+                  },
+                  tooltip: AppLocalizations.of(context).translate("view-requests"),
+                )
+              ],
             ),
             body: GoogleMap(
               onMapCreated: (controller) {
@@ -196,8 +196,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text("You don't need help."),
-                        content: Text("You're smart!"),
+                        title: Text(AppLocalizations.of(context)
+                            .translate("help-title")),
+                        content: Text(AppLocalizations.of(context)
+                            .translate("help-content")),
                         actions: <Widget>[
                           FlatButton(
                             child: Text(

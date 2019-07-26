@@ -306,7 +306,7 @@ class _ViewRequestState extends State<ViewRequest> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Requests'),
+        title: Text(AppLocalizations.of(context).translate("view-requests")),
       ),
       body: ListView.builder(
           itemCount: (requestsForMe.length),

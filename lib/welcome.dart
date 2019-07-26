@@ -89,15 +89,40 @@ class _CreateJoinGroupListState extends State<_CreateJoinGroupList> {
           title: RaisedButton(
             onPressed: _buttonEnabled
                 ? () async {
+                    setState(() {
+                      _buttonEnabled = false;
+                    });
                     switch (_choice) {
                       case WelcomeChoice.createGroup:
-                        await createGroup(_text);
+                        String result = await createGroup(_text);
+                        while (Navigator.canPop(context))
+                          Navigator.pop(context);
+                        showErrorDialog(
+                            context,
+                            AppLocalizations.of(context)
+                                .translate("create-success"),
+                            result);
                         break;
                       case WelcomeChoice.joinRoom:
-                        await joinGroup(_text);
+                        String result = await joinGroup(_text);
+                        if (result == null) {
+                          showErrorDialog(
+                              context,
+                              AppLocalizations.of(context)
+                                  .translate("join-failed"),
+                              AppLocalizations.of(context)
+                                  .translate("join-failed-text"));
+                        } else {
+                          while (Navigator.canPop(context))
+                            Navigator.pop(context);
+                          showErrorDialog(
+                              context,
+                              AppLocalizations.of(context)
+                                  .translate("join-success"),
+                              result);
+                        }
                         break;
                     }
-                    while (Navigator.canPop(context)) Navigator.pop(context);
                   }
                 : null,
             textColor: Colors.white,

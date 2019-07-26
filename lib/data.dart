@@ -32,7 +32,7 @@ Future _putData(String route, String body) async {
       .timeout(Duration(seconds: 10));
 }
 
-Future createGroup(String name) async {
+Future<String> createGroup(String name) async {
   String groups = await _getData("groups");
   if (groups == "null") groups = "{";
   String roomCode;
@@ -46,16 +46,18 @@ Future createGroup(String name) async {
   await _putData("group_" + roomCode, body);
   await _putData("groups", _addToExistingJson(groups, roomCode));
   await joinGroup(roomCode);
+  return name + "\n\n(" + roomCode + ")";
 }
 
-Future joinGroup(String roomCode) async {
+Future<String> joinGroup(String roomCode) async {
+  String raw = await _getData("group_" + roomCode);
+  if (raw == "null") return null;
+  String name = json.decode(raw)["name"].toString();
   await _addToList("group_" + roomCode + "/people", savedNameId.toString());
   await _addToList("person_" + savedNameId.toString() + "/groups", roomCode);
   if (!myself._groups.containsKey(roomCode))
-    myself._groups.addAll({
-      roomCode:
-          json.decode(await _getData("group_" + roomCode))["name"].toString()
-    });
+    myself._groups.addAll({roomCode: name});
+  return name;
 }
 
 /*Future leaveGroup(String roomCode) async {
@@ -192,15 +194,6 @@ void createMeetRequest(String meetingType, String message, int distance,
     int ageLower, int ageUpper, String sex, List<String> selectedGroups) async {
   String requestId = DateTime.now().millisecondsSinceEpoch.toString();
   requestId = requestId.substring(4, requestId.length);
-  print("hiasdfhlawefj");
-  print(meetingType);
-  print(message);
-  print(distance);
-  print(ageLower);
-  print(ageUpper);
-  print(sex);
-  print(selectedGroups);
-  print("lwkefj");
   String body = '{';
   if (meetingType != null) {
     body += '"type":"';
@@ -230,7 +223,6 @@ void createMeetRequest(String meetingType, String message, int distance,
   body += '"groups":' + listToJson(selectedGroups) + ",";
   body += '"sender":"' + savedNameId.toString() + '",';
   body += '"message":"' + message + '"}';
-  print(body);
   await _putData("request_" + requestId, body);
   for (String group in selectedGroups)
     await _addToList("group_" + group + "/requests", requestId);
