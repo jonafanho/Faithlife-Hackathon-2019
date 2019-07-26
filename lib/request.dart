@@ -284,9 +284,7 @@ class _RequestMeetState extends State<RequestMeet> {
                           _distanceChecked ? _distance : 0,
                           _ageLowerChecked ? _ageLower : null,
                           _ageUpperChecked ? _ageUpper : null,
-                          _sexValue == sexStringList.first
-                              ? null
-                              : sexStringList.indexOf(_sexValue),
+                          sexStringList.indexOf(_sexValue),
                           _groupList);
                       Navigator.pop(context);
                     },

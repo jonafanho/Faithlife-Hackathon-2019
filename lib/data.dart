@@ -221,11 +221,7 @@ void createMeetRequest(String meetingType, String message, int distance,
     body += ageUpper.toString();
     body += '",';
   }
-  if (sex != null) {
-    body += '"sex":"';
-    body += sex.toString();
-    body += '",';
-  }
+  body += '"sex":"' + sex.toString() + '",';
   body += '"groups":' + listToJson(selectedGroups) + ",";
   body += '"sender":"' + savedNameId.toString() + '",';
   body += '"message":"' + message + '"}';
@@ -265,6 +261,7 @@ class Person {
   int _birthYear = -1, _birthMonth = -1, _birthDay = -1, _phone = -1;
   Sex _sex = Sex.none;
   Map<String, String> _groups = new Map<String, String>();
+  int latitude, longitude;
 
   void generate(String n) {
     _nameId = DateTime.now().millisecondsSinceEpoch;

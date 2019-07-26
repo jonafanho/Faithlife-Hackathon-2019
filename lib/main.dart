@@ -18,6 +18,7 @@ LatLng _pos = LatLng(47.649281, -122.358524);
 Map<Mood, String> moodMap;
 Map<Sex, String> sexMap;
 List<String> moodStringList, sexStringList;
+Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
@@ -125,6 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
               onMapCreated: (controller) {
                 _controller = controller;
               },
+              markers: Set<Marker>.of(markers.values),
               initialCameraPosition: CameraPosition(target: _pos, zoom: 10),
               myLocationEnabled: true,
               myLocationButtonEnabled: false,
