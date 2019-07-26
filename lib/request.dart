@@ -334,6 +334,8 @@ class _ViewRequestState extends State<ViewRequest> {
           String _hour =
               ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
                   .toString();
+          String _minute = (_requestTime.minute < 10 ? "0" : "") +
+              _requestTime.minute.toString();
           return ListTile(
             title: Text(
               _requestName,
@@ -352,7 +354,7 @@ class _ViewRequestState extends State<ViewRequest> {
             trailing: Text(
               _hour +
                   ":" +
-                  _requestTime.minute.toString() +
+                  _minute +
                   (_requestTime.hour >= 12 ? "pm" : "am") +
                   "\n" +
                   _requestTime.day.toString() +
