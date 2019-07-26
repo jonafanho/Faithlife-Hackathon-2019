@@ -321,16 +321,31 @@ class _ViewRequestState extends State<ViewRequest> {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context).translate("view-requests")),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: () {
+              setState(() async {
+                await getRequestsToMe();
+              });
+            },
+          )
+        ],
       ),
       body: ListView.builder(
         itemCount: (requestsForMe.length),
         itemBuilder: (BuildContext context, int i) {
-          int j = requestsForMe.length - i - 1;
-          String _requestMessage = requestsForMe[j].getMessage();
-          String _requestType = requestsForMe[j].getType();
-          String _requestName = requestsForMe[j].getName();
+          String _requestMessage = requestsForMe[i].getMessage();
+          String _requestType = requestsForMe[i].getType();
+          String _requestName = requestsForMe[i].getName();
+          if (_requestName == "")
+            _requestName = myself.getName() +
+                " (" +
+                AppLocalizations.of(context).translate("me") +
+                ")";
           DateTime _requestTime =
-              DateTime.fromMillisecondsSinceEpoch(requestsForMe[j].getId());
+              DateTime.fromMillisecondsSinceEpoch(requestsForMe[i].getId());
+          _requestTime = _requestTime.add(Duration(hours: -7)); // TODO
           String _hour =
               ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
                   .toString();

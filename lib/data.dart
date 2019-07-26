@@ -186,21 +186,23 @@ Future getRequestsToMe() async {
         if (!requestsOfMyGroups.contains(key.toString()))
           requestsOfMyGroups.add(key.toString());
       });
-      //print('Requests from my Groups: ' + requestsOfMyGroups.toString());
     }
   }
+  requestsOfMyGroups.sort((v1, v2) {
+    return int.parse(v2) - int.parse(v1);
+  });
+  //print('Requests from my Groups: ' + requestsOfMyGroups.toString());
 
   List<Request> _requestsForMe = new List<Request>();
-  _requestsForMe.clear();
 
   //Getting all requests that match me
   for (String request in requestsOfMyGroups) {
     String route = 'request_' + request;
     String response = await _getData(route);
-    //print("Reponse: " + response);
+    //print("Response: " + response);
     if (response == "null") continue;
     var requestMap = json.decode(response);
-
+    //print(requestMap);
     int birthYear = myself._birthYear;
     int birthMonth = myself._birthMonth;
     int birthDay = myself._birthDay;
@@ -209,42 +211,43 @@ Future getRequestsToMe() async {
             requestMap.containsKey("age_upper"))) continue;
     int myAge = calculateAge(birthYear, birthMonth, birthDay);
     if (requestMap.containsKey("age_lower") &&
-        int.parse(requestMap["age_lower"]) > myAge) {
+        int.parse(requestMap["age_lower"].toString()) > myAge) {
       continue;
       //print("Age lower doesn't fit you");
     }
     if (requestMap.containsKey("age_upper") &&
-        int.parse(requestMap["age_upper"]) < myAge) {
+        int.parse(requestMap["age_upper"].toString()) < myAge) {
       continue;
       //print("Age upper doesn't fit you");
     }
 
-    if (myself._sex.index == 0 && requestMap["sex"] != 0) continue;
-    if (myself._sex.index != 0 &&
-        requestMap["sex"] != 0 &&
-        myself._sex.index != requestMap["sex"]) {
+    if (myself._sex.index == 0 && requestMap["sex"].toString() != "0") continue;
+    if (requestMap["sex"].toString() != "0" &&
+        myself._sex.index.toString() != requestMap["sex"].toString()) {
       continue;
       //print("Sex doesn't fit you");
     }
 
     //Get the sender's name
+    String name = "";
     if (int.parse(requestMap["sender"]) != savedNameId) {
       String personRoute = 'person_' + requestMap["sender"].toString();
       String personResponse = await _getData(personRoute);
       var personMap = json.decode(personResponse);
       if (personResponse != "null" && personMap.containsKey("name")) {
-        String name = personMap["name"].toString();
-        String message = requestMap["message"].toString();
-        String type = requestMap["type"].toString();
-        int id = int.parse(request);
-
-        Request newRequestForMe = new Request(name, message, type, id);
-        _requestsForMe.add(newRequestForMe);
+        name = personMap["name"].toString();
       }
     }
+    String message = requestMap["message"].toString();
+    String type = requestMap["type"].toString();
+    int id = int.parse(request);
+
+    Request newRequestForMe = new Request(name, message, type, id);
+    _requestsForMe.add(newRequestForMe);
   }
 
   requestsForMe = _requestsForMe;
+  print("Done retrieving requests.");
   /*for (Request r in _requestsForMe) {
     print("FOUND REQUEST(S) FOR ME {name: " +
         r.getName() +
@@ -434,12 +437,12 @@ class Person {
     _name = data["name"];
     _nameId = nameId;
     try {
-      _mood = Mood.values[int.parse(data["mood"])];
-      _birthYear = int.parse(data["birthYear"]);
-      _birthMonth = int.parse(data["birthMonth"]);
-      _birthDay = int.parse(data["birthDay"]);
-      _sex = Sex.values[int.parse(data["sex"])];
-      _phone = int.parse(data["phone"]);
+      _mood = Mood.values[int.parse(data["mood"].toString())];
+      _birthYear = int.parse(data["birthYear"].toString());
+      _birthMonth = int.parse(data["birthMonth"].toString());
+      _birthDay = int.parse(data["birthDay"].toString());
+      _sex = Sex.values[int.parse(data["sex"].toString())];
+      _phone = int.parse(data["phone"].toString());
       data["groups"].forEach((key, value) async {
         _groups.addAll({
           key.toString(): json
