@@ -85,7 +85,7 @@ class _RequestMeetState extends State<RequestMeet> {
             title: Row(
               children: [
                 Text(
-                  "within  ",
+                  AppLocalizations.of(context).translate("within-km")+" ",
                   style: TextStyle(
                     color: _distanceChecked ? Colors.black : Colors.grey,
                   ),
@@ -109,7 +109,7 @@ class _RequestMeetState extends State<RequestMeet> {
                   ),
                 ),
                 Text(
-                  " km",
+                  " " + AppLocalizations.of(context).translate("km"),
                   style: TextStyle(
                     color: _distanceChecked ? Colors.black : Colors.grey,
                   ),
@@ -312,25 +312,27 @@ class _ViewRequestState extends State<ViewRequest> {
           itemCount: (requestsForMe.length),
           itemBuilder: (BuildContext context, int i) {
             return ListTile(
-              title: Text(
-                requestsForMe[i].getName(),
-                style: TextStyle(color: themeColour, fontSize: 16),
-                textAlign: TextAlign.center,
-              ),
-              subtitle: Text(
-                requestsForMe[i].getMessage(),
-                style: TextStyle(color: Colors.black, fontSize: 14),
-                textAlign: TextAlign.center,
-              ),
-              leading:Icon(
-                requestsForMe[i].getType()=="Prayer request" ? Icons.accessibility_new :
-                  requestsForMe[i].getType()=="Bible related" ? Icons.book :
-                  requestsForMe[i].getType()=="Let's chat!" ? Icons.chat :
-                  Icons.help,
-                color: themeColour,
-                size: 30.0,
-              )
-            );
+                title: Text(
+                  requestsForMe[i].getName(),
+                  style: TextStyle(color: themeColour, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+                subtitle: Text(
+                  requestsForMe[i].getMessage(),
+                  style: TextStyle(color: Colors.black, fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                leading: Icon(
+                  requestsForMe[i].getType() == "Prayer request"
+                      ? Icons.accessibility_new
+                      : requestsForMe[i].getType() == "Bible related"
+                          ? Icons.book
+                          : requestsForMe[i].getType() == "Let's chat!"
+                              ? Icons.chat
+                              : Icons.help,
+                  color: themeColour,
+                  size: 30.0,
+                ));
           }),
     );
   }

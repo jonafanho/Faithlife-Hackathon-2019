@@ -27,6 +27,7 @@
   "join-failed": "加入群組失敗！",
   "join-failed-text": "請檢查群組密碼並再試一次。",
   "join-success": "加入群組成功！",
+  "km": "公里之內",
   "me": "我",
   "mood": "您感覺怎麼樣？",
   "name": "姓名",
@@ -54,5 +55,6 @@
   "submit": "輸入",
   "view-requests": "查看請求",
   "welcome": "歡迎使用",
+  "within-km": "在",
   "years-old": "歲"
 }

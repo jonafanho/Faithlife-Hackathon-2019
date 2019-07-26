@@ -27,6 +27,7 @@
   "join-failed": "Failed to join the group!",
   "join-failed-text": "Check your room code and try again.",
   "join-success": "Successfully joined the group",
+  "km": "kilometres",
   "me": "me",
   "mood": "How are you feeling?",
   "name": "Name",
@@ -54,5 +55,6 @@
   "submit": "Submit",
   "view-requests": "View requests",
   "welcome": "Welcome to",
+  "within-km": "Within",
   "years-old": "years old"
 }
