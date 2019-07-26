@@ -200,8 +200,9 @@ class _RequestMeetState extends State<RequestMeet> {
             ]),
           ),
           ListTile(
-            leading: Text(AppLocalizations.of(context).translate("sex")),
+            //leading: Text(AppLocalizations.of(context).translate("sex")),
             title: DropdownButton<String>(
+              icon: Icon(Icons.wc),
               value: _sexValue,
               onChanged: (newValue) {
                 setState(() {

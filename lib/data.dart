@@ -13,6 +13,9 @@ import "profile.dart";
 
 Future<int> init() async {
   final _prefs = await SharedPreferences.getInstance();
+  String lang = _prefs.getString("language");
+  if (lang == null) lang = "en";
+  language = lang;
   int id = _prefs.getInt("nameId");
   if (id == null) return 0;
   if (!await myself._getPersonFromDatabase(id)) return 0;

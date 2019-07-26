@@ -8,6 +8,7 @@ import "data.dart";
 import "welcome.dart";
 import "request.dart";
 import "profile.dart";
+import "settings.dart";
 import 'dart:async';
 
 Color themeColour = Colors.deepOrange;
@@ -19,6 +20,9 @@ Map<Sex, String> sexMap;
 List<String> moodStringList, sexStringList;
 Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 List<Request> requestsForMe = new List<Request>();
+
+String language = "en";
+final String startLanguage = language;
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
@@ -59,7 +63,7 @@ class MyApp extends StatelessWidget {
       ],
       localeResolutionCallback: (locale, supportedLocales) {
         for (var supportedLocale in supportedLocales)
-          if (supportedLocale.languageCode == "en") //locale?.languageCode)
+          if (supportedLocale.languageCode == language) //locale?.languageCode)
             return supportedLocale;
         return supportedLocales.first;
       },
@@ -201,6 +205,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   leading: Icon(Icons.settings),
                   onTap: () {
                     Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Settings()));
                   },
                 ),
                 ListTile(
