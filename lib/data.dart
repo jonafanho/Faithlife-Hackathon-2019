@@ -218,7 +218,7 @@ Future getRequestsToMe() async {
 
     if (myself._sex.index == 0 && requestMap["sex"] != 0) continue;
     if (myself._sex.index != 0 &&
-        int.parse(requestMap["sex"]) != 0 &&
+        requestMap["sex"] != 0 &&
         myself._sex.index != requestMap["sex"]) {
       continue;
       //print("Sex doesn't fit you");
