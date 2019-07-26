@@ -92,7 +92,7 @@ void getRequestsToMe() async {
 
   //Getting all requests that match me
   for(String request in requestsOfMyGroups){
-    String route = 'request_' + request;
+    String route = request;
     String response = await _getData(route);
     print("Reponse: "+response);
     if (response != "null") {
