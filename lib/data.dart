@@ -261,22 +261,22 @@ Future getRequestsToMe() async {
   seenRequestsForMe.clear();
   haventSeenRequestsForMe.clear();
 
-  for(Request req in requestsForMe) {
+  for (Request req in requestsForMe) {
     haventSeenRequestsForMe.add(req);
   }
 
-  for(int id in seenRequestId) {
-    for(Request req in requestsForMe) {
-      if(req.getId() == id) {
+  for (int id in seenRequestId) {
+    for (Request req in requestsForMe) {
+      if (req.getId() == id) {
         seenRequestsForMe.add(req);
         haventSeenRequestsForMe.remove(req);
       }
     }
   }
 
-  print("Request: "+requestsForMe.toString());
-  print("HaventSeenRequest: "+haventSeenRequestsForMe.toString());
-  print("SeenRequest: "+seenRequestsForMe.toString());
+//  print("Request: "+requestsForMe.toString());
+//  print("HaventSeenRequest: "+haventSeenRequestsForMe.toString());
+//  print("SeenRequest: "+seenRequestsForMe.toString());
 }
 
 int calculateAge(int year, int month, int day) {

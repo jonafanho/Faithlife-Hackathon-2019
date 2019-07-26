@@ -333,14 +333,19 @@ class _ViewRequestState extends State<ViewRequest> {
       body: ListView.builder(
         itemCount: (haventSeenRequestsForMe.length),
         itemBuilder: (BuildContext context, int i) {
-          int j = haventSeenRequestsForMe.length - i - 1;
-          String _requestMessage = haventSeenRequestsForMe[j].getMessage();
-          String _requestType = haventSeenRequestsForMe[j].getType();
-          String _requestName = haventSeenRequestsForMe[j].getName();
-          //int _requestId = haventSeenRequestsForMe[j].getId();
+          String _requestMessage = haventSeenRequestsForMe[i].getMessage();
+          String _requestType = haventSeenRequestsForMe[i].getType();
+          String _requestName = haventSeenRequestsForMe[i].getName();
+          //int _requestId = haventSeenRequestsForMe[i].getId();
+          if (_requestName == "")
+            _requestName = myself.getName() +
+                " (" +
+                AppLocalizations.of(context).translate("me") +
+                ")";
 
           DateTime _requestTime =
-              DateTime.fromMillisecondsSinceEpoch(haventSeenRequestsForMe[j].getId());
+              DateTime.fromMillisecondsSinceEpoch(requestsForMe[i].getId());
+          _requestTime = _requestTime.add(Duration(hours: -7)); // TODO
           String _hour =
               ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
                   .toString();
@@ -380,8 +385,8 @@ class _ViewRequestState extends State<ViewRequest> {
                   _requestName +
                       ": " +
                       _requestType.substring(1, _requestType.length),
-                  _requestMessage, haventSeenRequestsForMe[j]);
-
+                  _requestMessage,
+                  haventSeenRequestsForMe[i]);
             },
           );
         },
