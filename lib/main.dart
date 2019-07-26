@@ -21,6 +21,11 @@ List<String> moodStringList, sexStringList;
 Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 List<Request> requestsForMe = new List<Request>();
 
+List<int> seenRequestId = new List<int>();
+List<Request> seenRequestsForMe = new List<Request>();
+List<Request> haventSeenRequestsForMe = new List<Request>();
+
+
 String language = "en";
 final String startLanguage = language;
 
@@ -302,4 +307,29 @@ void showErrorDialog(BuildContext context, String title, String text) {
               )
             ],
           ));
+}
+
+void showMsgDialog(BuildContext context, String title, String text, Request req) {
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(text),
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Remove this request"),
+            onPressed: () {
+              seenRequestId.add(req.getId());
+              haventSeenRequestsForMe.remove(req);
+              Navigator.pop(context);
+            },
+          ),
+          FlatButton(
+            child: new Text("Close"),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ));
 }

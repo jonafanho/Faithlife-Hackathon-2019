@@ -331,19 +331,16 @@ class _ViewRequestState extends State<ViewRequest> {
         ],
       ),
       body: ListView.builder(
-        itemCount: (requestsForMe.length),
+        itemCount: (haventSeenRequestsForMe.length),
         itemBuilder: (BuildContext context, int i) {
-          String _requestMessage = requestsForMe[i].getMessage();
-          String _requestType = requestsForMe[i].getType();
-          String _requestName = requestsForMe[i].getName();
-          if (_requestName == "")
-            _requestName = myself.getName() +
-                " (" +
-                AppLocalizations.of(context).translate("me") +
-                ")";
+          int j = haventSeenRequestsForMe.length - i - 1;
+          String _requestMessage = haventSeenRequestsForMe[j].getMessage();
+          String _requestType = haventSeenRequestsForMe[j].getType();
+          String _requestName = haventSeenRequestsForMe[j].getName();
+          //int _requestId = haventSeenRequestsForMe[j].getId();
+
           DateTime _requestTime =
-              DateTime.fromMillisecondsSinceEpoch(requestsForMe[i].getId());
-          _requestTime = _requestTime.add(Duration(hours: -7)); // TODO
+              DateTime.fromMillisecondsSinceEpoch(haventSeenRequestsForMe[j].getId());
           String _hour =
               ((_requestTime.hour % 12) + (_requestTime.hour == 0 ? 12 : 0))
                   .toString();
@@ -378,12 +375,13 @@ class _ViewRequestState extends State<ViewRequest> {
               textAlign: TextAlign.right,
             ),
             onTap: () {
-              showErrorDialog(
+              showMsgDialog(
                   context,
                   _requestName +
                       ": " +
                       _requestType.substring(1, _requestType.length),
-                  _requestMessage);
+                  _requestMessage, haventSeenRequestsForMe[j]);
+
             },
           );
         },
