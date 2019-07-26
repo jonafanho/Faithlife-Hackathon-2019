@@ -287,3 +287,30 @@ class _RequestMeetState extends State<RequestMeet> {
     );
   }
 }
+
+class ViewRequest extends StatefulWidget {
+  @override
+  _ViewRequestState createState() => _ViewRequestState();
+}
+
+class _ViewRequestState extends State<ViewRequest> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('View Requests'),
+      ),
+      body: ListView.builder(
+          itemCount: (requestsForMe.length),
+          itemBuilder: (BuildContext context, int i) {
+            return ListTile(
+              title: Text(
+                requestsForMe[i].getName(),
+                style: TextStyle(color: themeColour, fontSize: 14),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }),
+    );
+  }
+}

@@ -108,7 +108,18 @@ class _MyHomePageState extends State<MyHomePage> {
           )
         : Scaffold(
             appBar: AppBar(
-                title: Text(AppLocalizations.of(context).translate("home"))),
+                title: Text(AppLocalizations.of(context).translate("home")),
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.open_in_new),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ViewRequest()));
+                    },
+                    tooltip: "View Requests",
+                  )
+                ],
+            ),
             body: GoogleMap(
               onMapCreated: (controller) {
                 _controller = controller;

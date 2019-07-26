@@ -92,9 +92,9 @@ void getRequestsToMe() async {
 
   //Getting all requests that match me
   for(String request in requestsOfMyGroups){
-    String route = request;
+    String route = 'request_'+request;
     String response = await _getData(route);
-    print("Reponse: "+response);
+    print("Reponse : "+response);
     if (response != "null") {
       var requestMap = json.decode(response);
       bool fitsMe = true;
