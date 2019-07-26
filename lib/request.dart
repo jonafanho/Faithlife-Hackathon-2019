@@ -322,6 +322,14 @@ class _ViewRequestState extends State<ViewRequest> {
                 style: TextStyle(color: Colors.black, fontSize: 14),
                 textAlign: TextAlign.center,
               ),
+              leading:Icon(
+                requestsForMe[i].getType()=="Prayer request" ? Icons.accessibility_new :
+                  requestsForMe[i].getType()=="Bible related" ? Icons.book :
+                  requestsForMe[i].getType()=="Let's chat!" ? Icons.chat :
+                  Icons.help,
+                color: themeColour,
+                size: 30.0,
+              )
             );
           }),
     );
