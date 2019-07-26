@@ -157,8 +157,10 @@ Future<String> joinGroup(String roomCode) async {
 }*/
 
 Future getRequestsToMe() async {
-  print(
-      "----------------------------------------------------------------------------------------");
+  //print(
+  //"----------------------------------------------------------------------------------------");
+
+  List<String> requestsOfMyGroups = new List<String>();
   //print("10 seconds passed, pinging...");
   requestsOfMyGroups.clear();
 
@@ -178,70 +180,69 @@ Future getRequestsToMe() async {
     if (response != "null") {
       var requestMap = json.decode(response);
       requestMap.forEach((key, value) {
-        requestsOfMyGroups.add(key.toString());
+        if (!requestsOfMyGroups.contains(key.toString()))
+          requestsOfMyGroups.add(key.toString());
       });
       //print('Requests from my Groups: ' + requestsOfMyGroups.toString());
     }
   }
 
-  requestsForMe.clear();
+  List<Request> _requestsForMe = new List<Request>();
+  _requestsForMe.clear();
 
   //Getting all requests that match me
   for (String request in requestsOfMyGroups) {
     String route = 'request_' + request;
     String response = await _getData(route);
     //print("Reponse: " + response);
-    if (response != "null") {
-      var requestMap = json.decode(response);
-      bool fitsMe = true;
+    if (response == "null") continue;
+    var requestMap = json.decode(response);
 
-      int birthYear = myself._birthYear;
-      int birthMonth = myself._birthMonth;
-      int birthDay = myself._birthDay;
-      int myAge = calculateAge(birthYear, birthMonth, birthDay);
+    int birthYear = myself._birthYear;
+    int birthMonth = myself._birthMonth;
+    int birthDay = myself._birthDay;
+    if ((birthYear <= 0 || birthMonth <= 0 || birthDay <= 0) &&
+        (requestMap.containsKey("age_lower") ||
+            requestMap.containsKey("age_upper"))) continue;
+    int myAge = calculateAge(birthYear, birthMonth, birthDay);
+    if (requestMap.containsKey("age_lower") &&
+        int.parse(requestMap["age_lower"]) > myAge) {
+      continue;
+      //print("Age lower doesn't fit you");
+    }
+    if (requestMap.containsKey("age_upper") &&
+        int.parse(requestMap["age_upper"]) < myAge) {
+      continue;
+      //print("Age upper doesn't fit you");
+    }
 
-      if (requestMap.containsKey("age_lower") &&
-          requestMap["age_lower"] > myAge) {
-        fitsMe = false;
-        print("Age lower doesn't fit you");
-      }
+    if (myself._sex.index == 0 && requestMap["sex"] != 0) continue;
+    if (myself._sex.index != 0 &&
+        int.parse(requestMap["sex"]) != 0 &&
+        myself._sex.index != requestMap["sex"]) {
+      continue;
+      //print("Sex doesn't fit you");
+    }
 
-      if (requestMap.containsKey("age_upper") &&
-          requestMap["age_upper"] < myAge) {
-        fitsMe = false;
-        print("Age upper doesn't fit you");
-      }
+    //Get the sender's name
+    if (int.parse(requestMap["sender"]) != savedNameId) {
+      String personRoute = 'person_' + requestMap["sender"].toString();
+      String personResponse = await _getData(personRoute);
+      var personMap = json.decode(personResponse);
+      if (personResponse != "null" && personMap.containsKey("name")) {
+        String name = personMap["name"].toString();
+        String message = requestMap["message"].toString();
+        String type = requestMap["type"].toString();
+        String id = request;
 
-      if (myself._sex.index == 0 && requestMap["sex"] != 0 ||
-          myself._sex.index != 0 &&
-              requestMap["sex"] != 0 &&
-              myself._sex.index != requestMap["sex"]) {
-        fitsMe = false;
-        print("Sex doesn't fit you");
-      }
-
-      //Get the sender's name
-      if (fitsMe &&
-          requestMap.containsKey("sender") &&
-          int.parse(requestMap["sender"]) != savedNameId &&
-          requestMap.containsKey("type")) {
-        String personRoute = 'person_' + requestMap["sender"].toString();
-        String personResponse = await _getData(personRoute);
-        var personMap = json.decode(personResponse);
-        if (personResponse != "null" && personMap.containsKey("name")) {
-          String name = personMap["name"];
-          String message = requestMap["message"];
-          String type = requestMap["type"];
-          String id = request;
-
-          Request newRequestForMe = new Request(name, message, type, id);
-          requestsForMe.add(newRequestForMe);
-        }
+        Request newRequestForMe = new Request(name, message, type, id);
+        _requestsForMe.add(newRequestForMe);
       }
     }
   }
 
-  for (Request r in requestsForMe) {
+  requestsForMe = _requestsForMe;
+  /*for (Request r in _requestsForMe) {
     print("FOUND REQUEST(S) FOR ME {name: " +
         r.getName() +
         " || message: " +
@@ -249,7 +250,7 @@ Future getRequestsToMe() async {
         " || type: " +
         r.getType() +
         '}');
-  }
+  }*/
 }
 
 int calculateAge(int year, int month, int day) {

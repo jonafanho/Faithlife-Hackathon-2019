@@ -85,7 +85,7 @@ class _RequestMeetState extends State<RequestMeet> {
             title: Row(
               children: [
                 Text(
-                  AppLocalizations.of(context).translate("within-km")+" ",
+                  AppLocalizations.of(context).translate("within-km") + " ",
                   style: TextStyle(
                     color: _distanceChecked ? Colors.black : Colors.grey,
                   ),
@@ -279,7 +279,7 @@ class _RequestMeetState extends State<RequestMeet> {
                       else
                         _groupList.addAll(myself.getGroups().keys);
                       createMeetRequest(
-                          _request,
+                          _requestList.indexOf(_request).toString() + _request,
                           _message,
                           _distanceChecked ? _distance : 0,
                           _ageLowerChecked ? _ageLower : null,
@@ -302,6 +302,19 @@ class ViewRequest extends StatefulWidget {
 }
 
 class _ViewRequestState extends State<ViewRequest> {
+  IconData getIconByRequestType(String requestType) {
+    switch (int.parse(requestType.substring(0, 1))) {
+      case 0:
+        return Icons.accessibility_new;
+      case 1:
+        return Icons.book;
+      case 2:
+        return Icons.chat;
+      default:
+        return Icons.help;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -309,31 +322,27 @@ class _ViewRequestState extends State<ViewRequest> {
         title: Text(AppLocalizations.of(context).translate("view-requests")),
       ),
       body: ListView.builder(
-          itemCount: (requestsForMe.length),
-          itemBuilder: (BuildContext context, int i) {
-            return ListTile(
-                title: Text(
-                  requestsForMe[i].getName(),
-                  style: TextStyle(color: themeColour, fontSize: 16),
-                  textAlign: TextAlign.center,
+        itemCount: (requestsForMe.length),
+        itemBuilder: (BuildContext context, int i) {
+          return ListTile(
+            title: Text(
+              requestsForMe[i].getName(),
+              //style: TextStyle(color: themeColour, fontSize: 16),
+              //textAlign: TextAlign.center,
+            ),
+            subtitle: Text(
+              requestsForMe[i].getMessage(),
+              //style: TextStyle(color: Colors.black, fontSize: 14),
+              //textAlign: TextAlign.center,
+            ),
+            leading: Icon(getIconByRequestType(requestsForMe[i].getType())
+                //color: themeColour,
+                //size: 30.0,
                 ),
-                subtitle: Text(
-                  requestsForMe[i].getMessage(),
-                  style: TextStyle(color: Colors.black, fontSize: 14),
-                  textAlign: TextAlign.center,
-                ),
-                leading: Icon(
-                  requestsForMe[i].getType() == "Prayer request"
-                      ? Icons.accessibility_new
-                      : requestsForMe[i].getType() == "Bible related"
-                          ? Icons.book
-                          : requestsForMe[i].getType() == "Let's chat!"
-                              ? Icons.chat
-                              : Icons.help,
-                  color: themeColour,
-                  size: 30.0,
-                ));
-          }),
+            onTap: () {},
+          );
+        },
+      ),
     );
   }
 }

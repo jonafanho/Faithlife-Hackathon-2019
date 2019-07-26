@@ -18,12 +18,10 @@ Map<Mood, String> moodMap;
 Map<Sex, String> sexMap;
 List<String> moodStringList, sexStringList;
 Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+List<Request> requestsForMe = new List<Request>();
 
 enum Mood { happy, thankful, sad, angry, none }
 enum Sex { none, male, female }
-
-List<String> requestsOfMyGroups = new List<String>();
-List<Request> requestsForMe = new List<Request>();
 
 Future main() async {
   savedNameId = await init();
@@ -81,7 +79,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer timer;
 
   _MyHomePageState() {
-    getLocations(this.context);
     timer = Timer.periodic(Duration(seconds: 10), (Timer t) => timerUpdate());
   }
 
@@ -116,6 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
     sexMap.forEach((sex, string) {
       sexStringList.add(string);
     });
+    getLocations(context);
+    getRequestsToMe();
     return savedNameId == 0
         ? CreateJoinGroup(
             askName: true,
